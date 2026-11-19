@@ -172,7 +172,7 @@ export const siteConfig = {
     primaryCta: '直接下载 APK 安装包',
     secondaryCta: '前往 GitHub Releases',
     copyCta: '复制口令格式说明',
-    copyHint: '路线分享口令格式：CT1:',
+    copyHint: '路线分享口令格式：CLOUDTRACE://',
     requirements: 'Android 10+ · Android 13+ 解锁完整 AGSL 折射',
     fallbackRelease: {
       tag: 'v1.12.3',

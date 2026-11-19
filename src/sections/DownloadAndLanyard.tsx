@@ -158,7 +158,7 @@ export function DownloadAndLanyard() {
   useEffect(() => () => window.clearTimeout(timerRef.current), []);
 
   const copy = async () => {
-    const text = `${siteConfig.download.copyHint}CT1-EXAMPLE-ROUTE`;
+    const text = `${siteConfig.download.copyHint}<路线口令>\n在云迹 App 的「路线 → 分享」中整段复制，粘贴到导入框即可。`;
     try {
       await navigator.clipboard.writeText(text);
     } catch {
