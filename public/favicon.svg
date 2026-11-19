@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#15181f"/>
+      <stop offset="0.55" stop-color="#050507"/>
+      <stop offset="1" stop-color="#10151c"/>
+    </linearGradient>
+    <linearGradient id="fiber" x1="12" y1="16" x2="52" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FEFF"/>
+      <stop offset="0.52" stop-color="#7DD3FC"/>
+      <stop offset="1" stop-color="#818CF8"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#bg)"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="14.5" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+  <rect x="13" y="23" width="38" height="21" rx="10.5" fill="none" stroke="url(#fiber)" stroke-width="2.4"/>
+  <rect x="18" y="27.5" width="28" height="12" rx="6" fill="none" stroke="rgba(226,232,240,0.35)" stroke-width="1"/>
+  <circle cx="32" cy="33.5" r="2.6" fill="#F8FEFF"/>
+  <circle cx="32" cy="33.5" r="6" fill="none" stroke="#38BDF8" stroke-width="1.1" opacity="0.55"/>
+</svg>
