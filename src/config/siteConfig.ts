@@ -18,21 +18,21 @@ export const siteConfig = {
 
   /** 应用源码、Release 与问题反馈所在仓库（安装包直链由此拉取） */
   github: {
-    owner: 'ZCShou',
-    repo: 'GoGoGo',
+    owner: 'sonder123i',
+    repo: 'CloudTrace',
     branch: 'master',
   },
 
   /** 官网自身仓库，仅用于页脚元信息，可留空 */
   websiteRepo: {
     owner: 'sonder123i',
-    repo: 'new',
+    repo: 'CloudTrace',
   },
 
   links: {
-    releases: 'https://github.com/ZCShou/GoGoGo/releases',
-    issues: 'https://github.com/ZCShou/GoGoGo/issues',
-    license: 'https://github.com/ZCShou/GoGoGo/blob/master/LICENSE',
+    releases: 'https://github.com/sonder123i/CloudTrace/releases',
+    issues: 'https://github.com/sonder123i/CloudTrace/issues',
+    license: 'https://github.com/sonder123i/CloudTrace/blob/master/LICENSE',
   },
 
   nav: [
@@ -207,10 +207,10 @@ export const siteConfig = {
       {
         title: '资源',
         links: [
-          { label: 'GitHub', href: 'https://github.com/ZCShou/GoGoGo' },
-          { label: 'Releases', href: 'https://github.com/ZCShou/GoGoGo/releases' },
-          { label: 'Issues', href: 'https://github.com/ZCShou/GoGoGo/issues' },
-          { label: 'MIT License', href: 'https://github.com/ZCShou/GoGoGo/blob/master/LICENSE' },
+          { label: 'GitHub', href: 'https://github.com/sonder123i/CloudTrace' },
+          { label: 'Releases', href: 'https://github.com/sonder123i/CloudTrace/releases' },
+          { label: 'Issues', href: 'https://github.com/sonder123i/CloudTrace/issues' },
+          { label: 'GPL-3.0 License', href: 'https://github.com/sonder123i/CloudTrace/blob/master/LICENSE' },
         ],
       },
     ],

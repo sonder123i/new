@@ -138,7 +138,7 @@ function drawPass(): string {
 
   ctx.fillStyle = 'rgba(255,255,255,0.24)';
   ctx.font = '400 16px ui-monospace, monospace';
-  ctx.fillText('MIT LICENSE · VISION 4.0', 84, height - 82);
+  ctx.fillText('GPL-3.0 · VISION 4.0', 84, height - 82);
 
   return canvas.toDataURL('image/png');
 }

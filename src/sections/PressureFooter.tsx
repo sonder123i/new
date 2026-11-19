@@ -114,7 +114,7 @@ export function PressureFooter() {
             <span className="h-3 w-px bg-white/10" />
             <span className="flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.14em] text-white/22">
               <Heart className="h-3 w-3 text-[#38BDF8]/50" />
-              MIT License
+              GPL-3.0 License
             </span>
           </div>
         </div>

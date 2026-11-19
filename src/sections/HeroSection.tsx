@@ -241,7 +241,7 @@ export function HeroSection() {
               </span>
             ))}
             <span className="hidden h-3 w-px bg-white/10 sm:block" />
-            <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-white/28">MIT LICENSE · OPEN SOURCE</span>
+            <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-white/28">GPL-3.0 · OPEN SOURCE</span>
           </div>
         </div>
 
