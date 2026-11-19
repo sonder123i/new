@@ -1,21 +1,6 @@
 'use client';
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
-import {
-  CodeIcon,
-  FigmaIcon,
-  File01Icon,
-  FileZipIcon,
-  Folder01Icon,
-  Image01Icon,
-  MusicNote01Icon,
-  Note01Icon,
-  Pdf01Icon,
-  Presentation01Icon,
-  Table01Icon,
-  Video01Icon
-} from '@hugeicons/core-free-icons';
 
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
@@ -107,25 +92,7 @@ const THEMES: Record<'dark' | 'light', Record<string, string>> = {
   }
 };
 
-const glyph = (icon: IconSvgElement) => <HugeiconsIcon icon={icon} size={18} strokeWidth={1.8} />;
-
-const DEFAULT_ITEMS: AnimatedListEntry[] = [
-  { icon: glyph(Folder01Icon), title: 'Brand assets', description: '24 files', meta: '2m' },
-  { icon: glyph(Image01Icon), title: 'Launch hero.png', description: '2.4 MB', meta: '18m' },
-  { icon: glyph(Video01Icon), title: 'Product tour.mp4', description: '148 MB', meta: '1h' },
-  { icon: glyph(Note01Icon), title: 'Pricing notes', description: '1,240 words', meta: '3h' },
-  { icon: glyph(CodeIcon), title: 'landing-page.tsx', description: '12 KB', meta: '5h' },
-  { icon: glyph(FigmaIcon), title: 'Onboarding flow', description: '38 frames', meta: '8h' },
-  { icon: glyph(MusicNote01Icon), title: 'Ambient loop.wav', description: '9.1 MB', meta: '1d' },
-  { icon: glyph(Table01Icon), title: 'Q3 forecast', description: '4 sheets', meta: '1d' },
-  { icon: glyph(Pdf01Icon), title: 'Brand guidelines.pdf', description: '6.8 MB', meta: '2d' },
-  { icon: glyph(Presentation01Icon), title: 'Investor update', description: '22 slides', meta: '3d' },
-  { icon: glyph(FileZipIcon), title: 'Icon set.zip', description: '1.2 MB', meta: '4d' },
-  { icon: glyph(Image01Icon), title: 'Moodboard.jpg', description: '3.6 MB', meta: '5d' },
-  { icon: glyph(File01Icon), title: 'Release notes', description: 'Version 2.4', meta: '1w' },
-  { icon: glyph(Folder01Icon), title: 'Archive', description: '118 files', meta: '2w' },
-  { icon: glyph(Video01Icon), title: 'Teaser cut.mov', description: '86 MB', meta: '3w' }
-];
+const EMPTY_ITEMS: AnimatedListEntry[] = [];
 
 const HIDDEN: Record<Animation, Record<'above' | 'below', string>> = {
   pop: { above: 'translate3d(0, -12px, 0) scale(0.8)', below: 'translate3d(0, 12px, 0) scale(0.8)' },
@@ -172,7 +139,7 @@ const RING_CLASS =
   'absolute inset-0 rounded-[var(--al-radius)] [background:var(--al-ring-fill)] [box-shadow:inset_0_0_0_1px_var(--al-ring)]';
 
 const AnimatedList = ({
-  items = DEFAULT_ITEMS,
+  items = EMPTY_ITEMS,
   onItemSelect,
   renderItem,
   initialSelectedIndex = -1,

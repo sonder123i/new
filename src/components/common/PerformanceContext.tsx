@@ -38,10 +38,6 @@ export function PerformanceProvider({ children }: { children: ReactNode }) {
     }
   }, [capability.prefersReducedMotion, capability.isLowPower, capability.isCoarsePointer]);
 
-  useEffect(() => {
-    document.documentElement.dataset.perf = mode;
-  }, [mode]);
-
   const setMode = useCallback((next: PerfMode) => {
     setModeState(next);
     try {
@@ -57,6 +53,11 @@ export function PerformanceProvider({ children }: { children: ReactNode }) {
 
   const effectiveMode: PerfMode =
     capability.prefersReducedMotion && mode === 'flagship' ? 'smooth' : mode;
+
+  // 写入生效模式（而非用户选择的模式），保证系统「减少动态效果」也能同步给 CSS 与 GSAP
+  useEffect(() => {
+    document.documentElement.dataset.perf = effectiveMode;
+  }, [effectiveMode]);
 
   const value = useMemo<PerformanceValue>(
     () => ({

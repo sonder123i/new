@@ -124,13 +124,22 @@ const fromManifest = (payload: ManifestPayload): LatestRelease => {
 
 const fromGithub = (data: GithubRelease): LatestRelease => {
   const apk = data.assets?.find((asset) => asset.name?.toLowerCase().endsWith('.apk'));
+  const tag = data.tag_name?.trim() || '';
+  const version = normalizeTag(tag);
+  // 由 tag + 资产名拼出 Gitee 直链，保证下载到的是 API 返回的版本，而不是 fallback 的旧包
+  const giteeUrl =
+    tag && apk?.name
+      ? `https://gitee.com/${siteConfig.github.owner}/${siteConfig.download.giteeRepo}/releases/download/${tag}/${apk.name}`
+      : '';
+  const matchesFallback = version === fallback.version;
+
   return {
-    version: normalizeTag(data.tag_name),
+    version,
     publishedAt: formatDate(data.published_at) || fallback.publishedAt,
     sizeKb: apk?.size ? Math.round(apk.size / 1024) : 0,
-    sha256: fallback.sha256,
-    // 直链永远优先：没有 Gitee 镜像时才退回 GitHub 资产直链
-    downloadUrl: fallback.downloadUrl,
+    // 只有与内置兜底版本一致时，兜底的 SHA-256 才可信
+    sha256: matchesFallback ? fallback.sha256 : '',
+    downloadUrl: giteeUrl || apk?.browser_download_url || fallback.downloadUrl,
     mirrorUrl: apk?.browser_download_url || fallback.mirrorUrl,
     releaseUrl: data.html_url || releasesUrl,
     notes: pickNotes(data.body).length ? pickNotes(data.body) : fallback.notes,

@@ -89,6 +89,7 @@ export function OpticalGallery() {
                   items={items}
                   bend={1.15}
                   textColor="#0A0C10"
+                  font="500 16px sans-serif"
                   borderRadius={0.072}
                   scrollSpeed={1.65}
                   scrollEase={0.08}

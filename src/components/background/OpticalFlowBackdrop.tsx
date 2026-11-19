@@ -144,6 +144,14 @@ export function OpticalFlowBackdrop({ material, eco = false }: OpticalFlowBackdr
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const materialRef = useRef<BackdropMaterial>(material);
   materialRef.current = material;
+  /** 2D 回退模式下的手动重绘入口（ECO 静态画布切材质 / resize 时使用） */
+  const redraw2DRef = useRef<(() => void) | null>(null);
+
+  // ECO 静态模式下切换材质：WebGL 分支由渲染循环平滑插值，2D 分支需要手动重绘一次
+  useEffect(() => {
+    if (!eco) return;
+    redraw2DRef.current?.();
+  }, [material, eco]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -166,7 +174,6 @@ export function OpticalFlowBackdrop({ material, eco = false }: OpticalFlowBackdr
         canvas.height = Math.max(1, Math.floor(window.innerHeight * dpr));
       };
       resize();
-      window.addEventListener('resize', resize, { passive: true });
 
       const draw = (now: number) => {
         const t = now * 0.00025;
@@ -208,10 +215,22 @@ export function OpticalFlowBackdrop({ material, eco = false }: OpticalFlowBackdr
         }
       };
 
+      // 静态（ECO）模式下也保留一次手动重绘能力，供 resize / 材质切换使用
+      const renderOnce = () => draw(performance.now());
+      redraw2DRef.current = renderOnce;
+
+      const onResize = () => {
+        resize();
+        renderOnce();
+      };
+
+      window.addEventListener('resize', onResize, { passive: true });
       raf = requestAnimationFrame(draw);
+
       return () => {
         cancelAnimationFrame(raf);
-        window.removeEventListener('resize', resize);
+        redraw2DRef.current = null;
+        window.removeEventListener('resize', onResize);
       };
     };
 
@@ -348,7 +367,8 @@ export function OpticalFlowBackdrop({ material, eco = false }: OpticalFlowBackdr
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-20 overflow-hidden bg-[#F3F5F8]">
-      <canvas ref={canvasRef} className="block h-full w-full" />
+      {/* key 随 eco 变化：同一块 canvas 无法从 webgl 切到 2d 上下文，必须换元素 */}
+      <canvas key={eco ? '2d' : 'webgl'} ref={canvasRef} className="block h-full w-full" />
       {/* 极细建筑测绘十字坐标点缀（静态零开销） */}
       <div className="fixed left-5 top-5 hidden font-mono text-[10px] text-[#0A0C10]/20 lg:block">+</div>
       <div className="fixed right-5 top-5 hidden font-mono text-[10px] text-[#0A0C10]/20 lg:block">+</div>

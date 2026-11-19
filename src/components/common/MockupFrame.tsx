@@ -43,7 +43,7 @@ export function MockupFrame({
         className="pointer-events-none absolute -inset-[18%] -z-10 rounded-full opacity-70 blur-3xl"
         style={{
           background:
-            'radial-gradient(closest-side, rgba(56,189,248,0.16), rgba(129,140,248,0.08) 45%, transparent 72%)',
+            'radial-gradient(closest-side, rgba(255,255,255,0.65), rgba(203,213,225,0.18) 50%, transparent 74%)',
         }}
       />
 

@@ -3,17 +3,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-/** 开场幕布时长（秒）。Hero 的入场时间轴以此为基准，改一处即可对齐。 */
-export const OPENING = {
-  /** 幕布面板退场 */
-  curtain: 1.0,
-  /** 幕布收起后，主标题开始前的留白 */
-  hold: 0.12,
-  get total() {
-    return this.curtain + this.hold;
-  },
-};
-
 /** 统一缓动：慢起慢收，避免廉价弹跳 */
 export const EASE = {
   /** 遮罩/位移揭示 */

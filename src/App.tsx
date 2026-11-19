@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MotionConfig } from 'motion/react';
 import ClickSpark from '@/components/reactbits/ClickSpark';
 import {
@@ -65,20 +65,9 @@ function BottomPorcelainFade() {
 }
 
 function Shell() {
-  const { capability, isFlagship } = usePerformance();
+  const { capability, isFlagship, toggle } = usePerformance();
   const [material, setMaterial] = useState<BackdropMaterial>('chrome');
-  const [ecoOverride, setEcoOverride] = useState(false);
-
-  const isEco = ecoOverride || !isFlagship;
-
-  // 同步写入 html[data-perf]，让 index.css 与 gsap motionAllowed() 保持一致
-  useEffect(() => {
-    document.documentElement.dataset.perf = isEco ? 'smooth' : 'flagship';
-  }, [isEco]);
-
-  const handleToggleEco = useCallback(() => {
-    setEcoOverride((prev) => !prev);
-  }, []);
+  const isEco = !isFlagship;
 
   return (
     <ClickSpark
@@ -97,7 +86,7 @@ function Shell() {
         material={material}
         onMaterialChange={setMaterial}
         eco={isEco}
-        onToggleEco={handleToggleEco}
+        onToggleEco={toggle}
       />
 
       <main className="relative z-10">

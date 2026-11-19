@@ -55,33 +55,34 @@
   }
 }
 
-/* 过渡期兼容：旧 section 仍在使用的动效与渐变工具类 */
-@keyframes drift {
+/* 旧组件仍引用的关键帧 */
+@keyframes sway {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: rotate(-1.1deg);
+  }
+  50% {
+    transform: rotate(1.1deg);
+  }
+}
+@keyframes sheen {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+  }
+  55%,
+  100% {
+    transform: translateX(240%) skewX(-18deg);
+  }
+}
+@keyframes sonar {
+  0% {
+    transform: scale(0.55);
     opacity: 0.55;
   }
-  50% {
-    transform: translate3d(2%, -3%, 0) scale(1.06);
-    opacity: 0.8;
-  }
-}
-@keyframes scan {
-  0% {
-    transform: translateY(-120%);
-  }
+  80%,
   100% {
-    transform: translateY(520%);
-  }
-}
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
+    transform: scale(1.9);
+    opacity: 0;
   }
 }
 
@@ -247,15 +248,15 @@
     content: '';
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: -1;
     pointer-events: none;
     border-radius: inherit;
     opacity: 0;
     transition: opacity 0.35s var(--ease-optical);
     background: radial-gradient(
       360px circle at var(--spot-x) var(--spot-y),
-      rgba(255, 255, 255, 0.72),
-      rgba(226, 232, 240, 0.2) 42%,
+      rgba(255, 255, 255, 0.82),
+      rgba(226, 232, 240, 0.24) 45%,
       transparent 72%
     );
   }
@@ -321,45 +322,15 @@
     animation: pulse-dot 2.4s ease-in-out infinite;
   }
 
-  /* ---- 过渡期兼容旧 section 的工具类（第二批替换后可删） ---- */
-  .animate-drift {
-    animation: drift 18s ease-in-out infinite;
+  /* ---- 仍在使用中的旧工具类 ---- */
+  .animate-sheen {
+    animation: sheen 4.5s linear infinite;
   }
-  .animate-scan {
-    animation: scan 9s linear infinite;
-  }
-  .animate-float {
-    animation: float 7s ease-in-out infinite;
+  .animate-sonar {
+    animation: sonar 3.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
   }
   .mask-fade-x {
     mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-  }
-  .text-silver-gradient {
-    background: linear-gradient(180deg, #0a0c10 0%, #3f4652 55%, #8b95a6 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .text-ice-gradient {
-    background: linear-gradient(180deg, #0a0c10 0%, #334155 60%, #64748b 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .text-outline {
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(10, 12, 16, 0.18);
-  }
-  .conic-ring {
-    background: conic-gradient(
-      from 0deg,
-      transparent 0deg,
-      rgba(10, 12, 16, 0.28) 40deg,
-      transparent 92deg,
-      transparent 240deg,
-      rgba(10, 12, 16, 0.16) 300deg,
-      transparent 360deg
-    );
   }
 }
 

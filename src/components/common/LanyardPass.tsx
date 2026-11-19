@@ -1,5 +1,4 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
-import { Move } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LanyardPassProps {
@@ -54,7 +53,7 @@ export function LanyardPass({ image, className }: LanyardPassProps) {
 
       {/* 挂绳 */}
       <div
-        className="absolute left-1/2 top-4 h-[190px] w-[22px] -translate-x-1/2 origin-top rounded-[3px]"
+        className="absolute left-1/2 top-4 h-[156px] w-[22px] -translate-x-1/2 origin-top rounded-[3px]"
         style={{
           transform: `translateX(calc(-50% + ${pose.x * 0.12}px)) rotate(${pose.rz * 0.5}deg)`,
           transition: dragging ? 'none' : 'transform 900ms cubic-bezier(0.16,1,0.3,1)',
@@ -68,7 +67,7 @@ export function LanyardPass({ image, className }: LanyardPassProps) {
       </div>
 
       {/* 卡面 */}
-      <div className="absolute top-[186px] z-20" style={{ perspective: '1200px' }}>
+      <div className="absolute top-[152px] z-20" style={{ perspective: '1200px' }}>
         <div
           className="animate-[sway_7s_ease-in-out_infinite]"
           style={{ transformOrigin: 'top center' }}
@@ -118,11 +117,6 @@ export function LanyardPass({ image, className }: LanyardPassProps) {
           opacity: 0.55 - Math.abs(pose.y) / 500,
         }}
       />
-
-      <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.2em] text-[#0A0C10]/40">
-        <Move className="h-3 w-3" />
-        drag the pass
-      </div>
     </div>
   );
 }

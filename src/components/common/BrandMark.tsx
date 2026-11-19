@@ -12,7 +12,7 @@ export function BrandMark({ size = 34, className }: { size?: number; className?:
       draggable={false}
       className={cn(
         'shrink-0 select-none rounded-[26%] object-contain',
-        'shadow-[0_6px_18px_-8px_rgba(0,0,0,0.85)] ring-1 ring-white/12',
+        'shadow-[0_8px_18px_-8px_rgba(15,23,42,0.28)] ring-1 ring-[#0A0C10]/10',
         className,
       )}
       style={{ width: size, height: size }}

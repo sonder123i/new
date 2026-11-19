@@ -14,26 +14,54 @@ const steps = siteConfig.workflow.steps;
 export function WorkflowShowcase() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [inView, setInView] = useState(false);
   const swapRef = useRef<{ next: () => void; prev: () => void }>(null);
+  const rootRef = useRef<HTMLElement>(null);
+  const timersRef = useRef<number[]>([]);
+
+  // 离屏暂停自动轮播，避免后台空转
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.1,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (paused) return undefined;
+    if (paused || !inView) return undefined;
     const timer = window.setInterval(() => swapRef.current?.next(), 5600);
     return () => window.clearInterval(timer);
-  }, [paused]);
+  }, [paused, inView]);
+
+  // 连续点击时清掉上一轮的步进定时器，避免互相打架
+  useEffect(
+    () => () => {
+      timersRef.current.forEach((id) => window.clearTimeout(id));
+      timersRef.current = [];
+    },
+    [],
+  );
 
   const goTo = (index: number) => {
+    timersRef.current.forEach((id) => window.clearTimeout(id));
+    timersRef.current = [];
+
     const diff = index - active;
     for (let step = 0; step < Math.abs(diff); step += 1) {
-      window.setTimeout(() => {
+      const id = window.setTimeout(() => {
         if (diff > 0) swapRef.current?.next();
         else swapRef.current?.prev();
       }, step * 190);
+      timersRef.current.push(id);
     }
   };
 
   return (
     <section
+      ref={rootRef}
       id="workflow"
       className="relative overflow-hidden border-y border-[#0A0C10]/[0.08] py-24 sm:py-32"
     >

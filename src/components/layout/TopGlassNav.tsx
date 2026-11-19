@@ -32,7 +32,7 @@ export function TopGlassNav({
 }) {
   const release = useLatestRelease();
   const [scrolled, setScrolled] = useState(false);
-  const [activeId, setActiveId] = useState<string>('features');
+  const [activeId, setActiveId] = useState<string>('');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -42,13 +42,18 @@ export function TopGlassNav({
   }, []);
 
   useEffect(() => {
-    const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(Boolean) as HTMLElement[];
+    const ids = ['top', ...NAV_ITEMS.map((item) => item.id)];
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
     if (!sections.length) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.find((e) => e.isIntersecting);
-        if (visible?.target.id) setActiveId(visible.target.id);
+        if (!visible?.target.id) return;
+        // 首屏不点亮任何锚点
+        setActiveId(visible.target.id === 'top' ? '' : visible.target.id);
       },
       { rootMargin: '-35% 0px -55% 0px' },
     );
