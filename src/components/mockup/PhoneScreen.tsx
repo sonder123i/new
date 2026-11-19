@@ -29,6 +29,7 @@ export type ScreenVariant = 'home' | 'run-dark' | 'roam' | 'builder' | 'island' 
 
 const ICE = '#38BDF8';
 const INDIGO = '#818CF8';
+const BRAND_ICON = `${import.meta.env.BASE_URL}brand-icon-192.png`;
 
 const iconStyle = (size: number): CSSProperties => ({ width: `${size}cqw`, height: `${size}cqw`, strokeWidth: 1.6 });
 
@@ -224,9 +225,8 @@ function HomeScreen() {
       <div className="relative z-20 px-[7cqw] pt-[6cqw]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-[2.2cqw]">
-            <div className="relative flex h-[11cqw] w-[11cqw] items-center justify-center rounded-[3.4cqw] bg-[#0B0F14] shadow-[0_6px_18px_rgba(11,15,20,0.22)]">
-              <div className="h-[6.4cqw] w-[6.4cqw] rounded-full border-[0.55cqw] border-white/85" />
-              <div className="absolute inset-[2.2cqw] rounded-full border border-[#38BDF8]/70" />
+            <div className="relative h-[11cqw] w-[11cqw] overflow-hidden rounded-[3.4cqw] shadow-[0_6px_18px_rgba(11,15,20,0.22)]">
+              <img src={BRAND_ICON} alt="" className="h-full w-full object-contain" draggable={false} />
             </div>
             <div>
               <div className="text-[4.6cqw] font-semibold leading-none tracking-[-0.02em] text-[#0B0F14]">云迹</div>
@@ -553,8 +553,8 @@ function IslandScreen() {
       <div className="absolute inset-x-[4.4cqw] top-[12.4cqw] z-30">
         <div className="rounded-[6.6cqw] border border-white/16 bg-[#0A0E14]/82 p-[3.6cqw] shadow-[0_30px_90px_-20px_rgba(0,0,0,0.95)] backdrop-blur-2xl" style={{ boxShadow: '0 30px 90px -20px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.22)' }}>
           <div className="flex items-center gap-[2.4cqw]">
-            <span className="flex h-[9cqw] w-[9cqw] items-center justify-center rounded-[3.2cqw] bg-[#0B0F14] ring-1 ring-white/15">
-              <span className="h-[4.6cqw] w-[4.6cqw] rounded-full border-[0.45cqw] border-white/85" />
+            <span className="flex h-[9cqw] w-[9cqw] items-center justify-center overflow-hidden rounded-[3.2cqw] ring-1 ring-white/15">
+              <img src={BRAND_ICON} alt="" className="h-full w-full object-contain" draggable={false} />
             </span>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-[1.4cqw]">
