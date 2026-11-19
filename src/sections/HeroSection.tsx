@@ -202,7 +202,7 @@ export function HeroSection() {
             <Magnet padding={40} magnetStrength={3.2} disabled={!capability.allowCursorFx}>
               <StarBorder
                 as="a"
-                href="#download"
+                href={release.downloadUrl}
                 color="#7DD3FC"
                 trailColor="#E2E8F0"
                 thickness={1}

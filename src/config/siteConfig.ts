@@ -168,21 +168,27 @@ export const siteConfig = {
     eyebrow: 'RELEASE',
     title: '即刻体验云迹 · CloudTrace',
     description:
-      '从 GitHub Releases 获取最新安装包。所有版本均附带更新日志与校验信息，历史版本可随时回退。',
-    primaryCta: '直接下载 APK 安装包',
-    secondaryCta: '前往 GitHub Releases',
+      '从 Gitee 或 GitHub 直接下载最新 APK。所有版本均带签名更新清单与 SHA-256 校验，历史版本可随时回退。',
+    primaryCta: '下载 APK（Gitee 直连）',
+    secondaryCta: 'GitHub 备用源',
     copyCta: '复制口令格式说明',
     copyHint: '路线分享口令格式：CLOUDTRACE://',
-    requirements: 'Android 10+ · Android 13+ 解锁完整 AGSL 折射',
+    requirements: 'Android 8.0+ · 仅 arm64-v8a · GPL-3.0',
+    /** Gitee 发行版直链：点击即下载 */
+    giteeRepo: 'cloud-traces',
+    apk: 'https://gitee.com/sonder123i/cloud-traces/releases/download/v1.13.2/Go_1.13.2_arm64-v8a_release.apk',
+    apkMirror:
+      'https://github.com/sonder123i/CloudTrace/releases/download/v1.13.2/Go_1.13.2_arm64-v8a_release.apk',
     fallbackRelease: {
-      tag: 'v1.12.3',
-      publishedAt: '2025-08-09',
-      sizeKb: 22733,
+      tag: 'v1.13.2',
+      publishedAt: '2026-11-19',
+      sizeKb: 14060,
+      sha256: 'd6e07718c4bd96c79389780c86c96b172f01a577c913a60f127e355d9dc72395',
       notes: [
-        '新增「圆形摇杆」与「按钮摇杆」两种控制样式',
-        '支持向 GPS / 网络 / 融合定位 Provider 同步提交模拟位置',
-        '消息已读状态支持版本跟踪，公告更新后重新提示',
-        '统一使用 WGS-84 坐标存储，改善地图与路线一致性',
+        '修复 Gitee 发行版下载的跳转域名，国内更新更稳',
+        '更新清单同时签名 GitHub 与 Gitee 双源',
+        '新增 Gitee CDN 域名单元测试，防止回归',
+        '协议措辞与 GPLv3 对齐，社区文件整理',
       ],
     },
     lanyard: {

@@ -148,14 +148,19 @@ export function DownloadAndLanyard() {
   const { isFlagship } = usePerformance();
   const [front, setFront] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const [copiedSha, setCopiedSha] = useState(false);
   const timerRef = useRef(0);
+  const shaTimerRef = useRef(0);
 
   useEffect(() => {
     const id = window.setTimeout(() => setFront(drawPass()), 120);
     return () => window.clearTimeout(id);
   }, []);
 
-  useEffect(() => () => window.clearTimeout(timerRef.current), []);
+  useEffect(() => () => {
+    window.clearTimeout(timerRef.current);
+    window.clearTimeout(shaTimerRef.current);
+  }, []);
 
   const copy = async () => {
     const text = `${siteConfig.download.copyHint}<路线口令>\n在云迹 App 的「路线 → 分享」中整段复制，粘贴到导入框即可。`;
@@ -167,6 +172,18 @@ export function DownloadAndLanyard() {
     setCopied(true);
     window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => setCopied(false), 2200);
+  };
+
+  const copySha = async () => {
+    if (!release.sha256) return;
+    try {
+      await navigator.clipboard.writeText(release.sha256);
+    } catch {
+      /* 无剪贴板权限时保持静默 */
+    }
+    setCopiedSha(true);
+    window.clearTimeout(shaTimerRef.current);
+    shaTimerRef.current = window.setTimeout(() => setCopiedSha(false), 2200);
   };
 
   return (
@@ -231,7 +248,7 @@ export function DownloadAndLanyard() {
                 </span>
                 {release.live ? (
                   <span className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">
-                    github api · live
+                    {release.source === 'manifest' ? 'signed manifest · live' : 'github api · live'}
                   </span>
                 ) : null}
               </div>
@@ -241,7 +258,7 @@ export function DownloadAndLanyard() {
                   {[
                     { icon: <CalendarDays className="h-3.5 w-3.5" />, label: '发布日期', value: release.publishedAt || '—' },
                     { icon: <HardDrive className="h-3.5 w-3.5" />, label: '安装包大小', value: formatSize(release.sizeKb) },
-                    { icon: <MonitorSmartphone className="h-3.5 w-3.5" />, label: '系统要求', value: 'Android 10+' },
+                    { icon: <MonitorSmartphone className="h-3.5 w-3.5" />, label: '系统要求', value: 'Android 8.0+' },
                   ].map((item) => (
                     <div key={item.label} className="px-4 py-3.5">
                       <div className="flex items-center gap-1.5 text-white/30">
@@ -267,8 +284,6 @@ export function DownloadAndLanyard() {
                 <StarBorder
                   as="a"
                   href={release.downloadUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
                   color="#7DD3FC"
                   trailColor="#E2E8F0"
                   thickness={1}
@@ -284,9 +299,7 @@ export function DownloadAndLanyard() {
                 </StarBorder>
 
                 <a
-                  href={release.releaseUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
+                  href={release.mirrorUrl}
                   className="glass-panel flex h-[52px] items-center justify-center gap-2 rounded-full px-5 text-[12.5px] text-white/70 transition-colors hover:text-white"
                 >
                   <ArrowUpRight className="h-3.5 w-3.5 opacity-50" />
@@ -307,6 +320,41 @@ export function DownloadAndLanyard() {
                   <ShieldCheck className="h-3 w-3" />
                   {siteConfig.download.requirements}
                 </span>
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-white/[0.07] bg-white/[0.02] px-4 py-3.5">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white/30">
+                    <ShieldCheck className="h-3 w-3" />
+                    SHA-256 · 校验安装包
+                  </span>
+                  <button
+                    type="button"
+                    onClick={copySha}
+                    className="rounded-full border border-white/10 px-2.5 py-1 font-mono text-[9.5px] text-white/40 transition-colors hover:border-white/20 hover:text-white/70"
+                  >
+                    {copiedSha ? '已复制' : '复制'}
+                  </button>
+                </div>
+                <div className="mt-2 break-all font-mono text-[10px] leading-[1.7] text-white/38">
+                  {release.sha256 || '—'}
+                </div>
+                <div className="mt-1.5 break-all font-mono text-[10px] leading-[1.7] text-white/24">
+                  apksigner verify --print-certs Go_{release.version.replace('v', '')}_arm64-v8a_release.apk
+                </div>
+                <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1">
+                  <a
+                    href={release.releaseUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-[#7DD3FC]/70 transition-colors hover:text-[#7DD3FC]"
+                  >
+                    全部版本 / 更新日志
+                  </a>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/20">
+                    与 App 内更新使用同一份签名清单
+                  </span>
+                </div>
               </div>
             </div>
           </Reveal>

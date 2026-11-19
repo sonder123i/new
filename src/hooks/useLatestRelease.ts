@@ -5,25 +5,38 @@ export interface LatestRelease {
   version: string;
   publishedAt: string;
   sizeKb: number;
+  sha256: string;
+  /** Gitee 发行版直链（国内直连，点击即下载） */
   downloadUrl: string;
+  /** GitHub 备用直链（同一个包） */
+  mirrorUrl: string;
+  /** GitHub Release 页面（更新说明 / 历史版本） */
   releaseUrl: string;
   notes: string[];
-  /** 是否来自 GitHub API 的真实数据 */
   live: boolean;
+  source: 'manifest' | 'github' | 'fallback';
   loading: boolean;
 }
 
-const apiUrl = `https://api.github.com/repos/${siteConfig.github.owner}/${siteConfig.github.repo}/releases/latest`;
-const releasesUrl = `https://github.com/${siteConfig.github.owner}/${siteConfig.github.repo}/releases/latest`;
+const owner = siteConfig.github.owner;
+const repo = siteConfig.github.repo;
+const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
+const releasesUrl = `https://github.com/${owner}/${repo}/releases/latest`;
+
+/** 与应用内更新同源的签名清单；站点与应用部署在同一个 Pages 下，可直接读取。 */
+const manifestUrl = './update/stable.json';
 
 const fallback: LatestRelease = {
   version: siteConfig.download.fallbackRelease.tag,
   publishedAt: siteConfig.download.fallbackRelease.publishedAt,
   sizeKb: siteConfig.download.fallbackRelease.sizeKb,
-  downloadUrl: releasesUrl,
+  sha256: siteConfig.download.fallbackRelease.sha256,
+  downloadUrl: siteConfig.download.apk,
+  mirrorUrl: siteConfig.download.apkMirror,
   releaseUrl: releasesUrl,
   notes: [...siteConfig.download.fallbackRelease.notes],
   live: false,
+  source: 'fallback',
   loading: true,
 };
 
@@ -34,6 +47,17 @@ type GithubRelease = {
   body?: string;
   html_url?: string;
   assets?: GithubAsset[];
+};
+
+type ManifestMirror = { id?: string; url?: string; name?: string };
+type ManifestPayload = {
+  versionName?: string;
+  versionCode?: number;
+  size?: number;
+  sha256?: string;
+  publishedAt?: string;
+  releaseNotes?: string;
+  mirrors?: ManifestMirror[];
 };
 
 const formatDate = (iso?: string) => {
@@ -59,11 +83,66 @@ const pickNotes = (body?: string) => {
     .slice(0, 4);
 };
 
+const decodePayload = (b64?: string): ManifestPayload | null => {
+  if (!b64) return null;
+  try {
+    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes)) as ManifestPayload;
+  } catch {
+    return null;
+  }
+};
+
+const isGitee = (mirror: ManifestMirror) =>
+  (mirror.id || '').toLowerCase() === 'gitee' || (mirror.url || '').includes('gitee.com');
+const isGithub = (mirror: ManifestMirror) =>
+  (mirror.id || '').toLowerCase() === 'gh' || (mirror.url || '').includes('github.com');
+
+const fromManifest = (payload: ManifestPayload): LatestRelease => {
+  const mirrors = payload.mirrors || [];
+  const gitee = mirrors.find(isGitee)?.url;
+  const github = mirrors.find(isGithub)?.url;
+  return {
+    version: payload.versionName ? `v${payload.versionName}` : fallback.version,
+    publishedAt: formatDate(payload.publishedAt) || fallback.publishedAt,
+    sizeKb: payload.size ? Math.round(payload.size / 1024) : fallback.sizeKb,
+    sha256: payload.sha256 || fallback.sha256,
+    downloadUrl: gitee || fallback.downloadUrl,
+    mirrorUrl: github || fallback.mirrorUrl,
+    releaseUrl: releasesUrl,
+    notes: pickNotes(payload.releaseNotes).length ? pickNotes(payload.releaseNotes) : fallback.notes,
+    live: true,
+    source: 'manifest',
+    loading: false,
+  };
+};
+
+const fromGithub = (data: GithubRelease): LatestRelease => {
+  const apk = data.assets?.find((asset) => asset.name?.toLowerCase().endsWith('.apk'));
+  return {
+    version: normalizeTag(data.tag_name),
+    publishedAt: formatDate(data.published_at) || fallback.publishedAt,
+    sizeKb: apk?.size ? Math.round(apk.size / 1024) : 0,
+    sha256: fallback.sha256,
+    // 直链永远优先：没有 Gitee 镜像时才退回 GitHub 资产直链
+    downloadUrl: fallback.downloadUrl,
+    mirrorUrl: apk?.browser_download_url || fallback.mirrorUrl,
+    releaseUrl: data.html_url || releasesUrl,
+    notes: pickNotes(data.body).length ? pickNotes(data.body) : fallback.notes,
+    live: true,
+    source: 'github',
+    loading: false,
+  };
+};
+
 let cache: LatestRelease | null = null;
 
 /**
- * 拉取 GitHub Releases 最新版本；超时 / 限流 / 无 Release 时静默回退到 siteConfig 配置。
- * 永远不抛出错误，保证下载按钮不会出现死链。
+ * 下载信息按优先级获取：
+ *   1. 同源签名更新清单（最准，含 Gitee/GitHub 双直链与 SHA-256）
+ *   2. GitHub Releases API（清单不可用时的兜底）
+ *   3. siteConfig 中写死的当前版本（离线/限流时仍能直接下载）
+ * 永远不抛错，保证下载按钮不是死链。
  */
 export function useLatestRelease(): LatestRelease {
   const [release, setRelease] = useState<LatestRelease>(cache ?? fallback);
@@ -74,34 +153,47 @@ export function useLatestRelease(): LatestRelease {
     const timer = window.setTimeout(() => controller.abort(), 6500);
     let alive = true;
 
-    fetch(apiUrl, {
-      signal: controller.signal,
-      headers: { Accept: 'application/vnd.github+json' },
-    })
-      .then((response) => {
+    const settle = (next: LatestRelease) => {
+      cache = next;
+      if (alive) setRelease(next);
+    };
+
+    const load = async () => {
+      // 1. 签名清单（同源，无跨域、无限流）
+      try {
+        const response = await fetch(manifestUrl, {
+          signal: controller.signal,
+          cache: 'no-store',
+        });
+        if (response.ok) {
+          const envelope = (await response.json()) as { payload?: string };
+          const payload = decodePayload(envelope.payload);
+          if (payload) {
+            settle(fromManifest(payload));
+            return;
+          }
+        }
+      } catch {
+        /* 继续尝试 GitHub API */
+      }
+
+      // 2. GitHub API
+      try {
+        const response = await fetch(apiUrl, {
+          signal: controller.signal,
+          headers: { Accept: 'application/vnd.github+json' },
+        });
         if (!response.ok) throw new Error(`GitHub API ${response.status}`);
-        return response.json() as Promise<GithubRelease>;
-      })
-      .then((data) => {
-        const apk = data.assets?.find((asset) => asset.name?.toLowerCase().endsWith('.apk'));
-        const next: LatestRelease = {
-          version: normalizeTag(data.tag_name),
-          publishedAt: formatDate(data.published_at) || fallback.publishedAt,
-          sizeKb: apk?.size ? Math.round(apk.size / 1024) : 0,
-          downloadUrl: apk?.browser_download_url || data.html_url || releasesUrl,
-          releaseUrl: data.html_url || releasesUrl,
-          notes: pickNotes(data.body).length ? pickNotes(data.body) : fallback.notes,
-          live: true,
-          loading: false,
-        };
-        cache = next;
-        if (alive) setRelease(next);
-      })
-      .catch(() => {
-        cache = { ...fallback, loading: false };
-        if (alive) setRelease(cache);
-      })
-      .finally(() => window.clearTimeout(timer));
+        settle(fromGithub((await response.json()) as GithubRelease));
+        return;
+      } catch {
+        /* 使用配置兜底 */
+      }
+
+      settle({ ...fallback, loading: false });
+    };
+
+    void load().finally(() => window.clearTimeout(timer));
 
     return () => {
       alive = false;

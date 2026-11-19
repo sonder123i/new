@@ -3,11 +3,13 @@ import { ArrowUpRight } from 'lucide-react';
 import { GithubGlyph } from '@/components/common/icons';
 import { BrandMark } from '@/components/common/BrandMark';
 import { siteConfig } from '@/config/siteConfig';
+import { useLatestRelease } from '@/hooks/useLatestRelease';
 import { cn } from '@/lib/utils';
 
 const SECTION_IDS = siteConfig.nav.map((item) => item.href.replace('#', ''));
 
 export function TopGlassNav() {
+  const release = useLatestRelease();
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>('');
 
@@ -95,7 +97,7 @@ export function TopGlassNav() {
         </a>
 
         <a
-          href="#download"
+          href={release.downloadUrl}
           className="group relative ml-0.5 flex h-10 items-center gap-1.5 overflow-hidden rounded-full bg-[#F5F5F7] px-4 text-[12.5px] font-medium text-[#08090c] transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]"
         >
           <span className="relative z-10">立即下载</span>
