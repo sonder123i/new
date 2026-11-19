@@ -26,6 +26,11 @@ const releasesUrl = `https://github.com/${owner}/${repo}/releases/latest`;
 /** 与应用内更新同源的签名清单；站点与应用部署在同一个 Pages 下，可直接读取。 */
 const manifestUrl = './update/stable.json';
 
+/** 单文件版（file:// 或打包产物）没有同源清单，直接走配置兜底，避免控制台报错。 */
+const isStandalone =
+  typeof window !== 'undefined' &&
+  (window.location.protocol === 'file:' || document.documentElement.dataset.standalone === 'true');
+
 const fallback: LatestRelease = {
   version: siteConfig.download.fallbackRelease.tag,
   publishedAt: siteConfig.download.fallbackRelease.publishedAt,
@@ -159,6 +164,12 @@ export function useLatestRelease(): LatestRelease {
     };
 
     const load = async () => {
+      // 单文件预览：不发起任何网络请求，直接用内置版本信息
+      if (isStandalone) {
+        settle({ ...fallback, loading: false });
+        return;
+      }
+
       // 1. 签名清单（同源，无跨域、无限流）
       try {
         const response = await fetch(manifestUrl, {

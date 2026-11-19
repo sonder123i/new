@@ -5,3 +5,7 @@ dist-ssr
 .DS_Store
 .vite
 npm-debug.log*
+
+# 单文件打包产物
+dist-single
+cloudtrace-site.html
