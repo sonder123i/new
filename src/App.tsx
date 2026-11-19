@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MotionConfig } from 'motion/react';
 import ClickSpark from '@/components/reactbits/ClickSpark';
 import { PerformanceProvider, usePerformance } from '@/components/common/PerformanceContext';
 import { FloatingDock } from '@/components/layout/FloatingDock';
 import { TopGlassNav } from '@/components/layout/TopGlassNav';
+import { OpeningCurtain } from '@/motion/OpeningCurtain';
 import { BentoFeatures } from '@/sections/BentoFeatures';
 import { DownloadAndLanyard } from '@/sections/DownloadAndLanyard';
 import { HeroSection } from '@/sections/HeroSection';
@@ -47,6 +48,8 @@ function ScrollProgress() {
 
 function Shell() {
   const { capability } = usePerformance();
+  const [opened, setOpened] = useState(false);
+  const handleOpened = useCallback(() => setOpened(true), []);
 
   return (
     <ClickSpark
@@ -59,10 +62,11 @@ function Shell() {
       glow={0.35}
       disabled={!capability.allowCursorFx}
     >
+      <OpeningCurtain onDone={handleOpened} />
       <ScrollProgress />
       <TopGlassNav />
       <main className="relative">
-        <HeroSection />
+        <HeroSection started={opened} />
         <TelemetryMarquee />
         <BentoFeatures />
         <WorkflowShowcase />

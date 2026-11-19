@@ -5,6 +5,7 @@ import GlareHover from '@/components/reactbits/GlareHover';
 import Threads from '@/components/reactbits/Threads';
 import { usePerformance } from '@/components/common/PerformanceContext';
 import { MockupFrame } from '@/components/common/MockupFrame';
+import { Parallax } from '@/motion/Parallax';
 import { Reveal, SectionHeader } from '@/components/common/SectionHeader';
 import { ViewportLazyMount } from '@/components/common/ViewportLazyMount';
 import { PhoneScreen } from '@/components/mockup/PhoneScreen';
@@ -189,7 +190,8 @@ export function WorkflowShowcase() {
 
           {/* 右侧卡片堆 */}
           <Reveal delay={0.1}>
-            <div className="relative mx-auto w-full max-w-[560px]">
+            <Parallax strength={48} className="relative mx-auto w-full max-w-[560px]">
+              <div className="relative mx-auto w-full max-w-[560px]">
               <div className="pointer-events-none absolute inset-x-8 top-10 bottom-10 -z-10 rounded-[60px] bg-[#38BDF8]/[0.055] blur-[60px]" />
               <CardSwap
                 ref={swapRef}
@@ -243,6 +245,7 @@ export function WorkflowShowcase() {
                 ))}
               </CardSwap>
             </div>
+            </Parallax>
           </Reveal>
         </div>
       </div>

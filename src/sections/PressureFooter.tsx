@@ -2,6 +2,7 @@ import { ArrowUp, Heart } from 'lucide-react';
 import { GithubGlyph } from '@/components/common/icons';
 import TextPressure from '@/components/reactbits/TextPressure';
 import { BrandMark } from '@/components/common/BrandMark';
+import { MaskReveal } from '@/motion/MaskReveal';
 import { siteConfig } from '@/config/siteConfig';
 
 export function PressureFooter() {
@@ -68,7 +69,7 @@ export function PressureFooter() {
         </div>
       </div>
 
-      <div className="relative mx-auto mt-10 h-[clamp(56px,10.4vw,152px)] w-[52%] select-none sm:mt-12">
+      <MaskReveal className="relative mx-auto mt-10 h-[clamp(56px,10.4vw,152px)] w-[52%] select-none sm:mt-12" duration={1.35} from="bottom">
         <TextPressure
           text="CLOUDTRACE"
           fontFamily="'Inter Variable', system-ui, sans-serif"
@@ -90,7 +91,7 @@ export function PressureFooter() {
           minFontSize={24}
           className="h-full w-full"
         />
-      </div>
+      </MaskReveal>
 
       <div className="relative border-t border-white/[0.06]">
         <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-4 px-6 pb-24 pt-6 sm:px-8 md:pb-28 lg:flex-row lg:items-center lg:justify-between">

@@ -16,7 +16,7 @@ import { PhoneScreen } from '@/components/mockup/PhoneScreen';
 import { useLatestRelease } from '@/hooks/useLatestRelease';
 import { siteConfig } from '@/config/siteConfig';
 
-export function HeroSection() {
+export function HeroSection({ started = true }: { started?: boolean }) {
   const { capability, isFlagship } = usePerformance();
   const release = useLatestRelease();
   const [mounted, setMounted] = useState(false);
@@ -109,7 +109,7 @@ export function HeroSection() {
         <div className="relative z-10 max-w-[660px]">
           <motion.div
             initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={started ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.035] py-1.5 pl-2.5 pr-4 backdrop-blur-md"
           >
@@ -141,6 +141,7 @@ export function HeroSection() {
               {siteConfig.brand.nameZh} · {siteConfig.brand.nameEn} —— {siteConfig.brand.tagline}
             </span>
             <SplitText
+              key={`l1-${started}`}
               text="将精密光学"
               tag="span"
               className="block text-[clamp(38px,5.1vw,62px)] font-[560] leading-[1.08] tracking-[-0.045em] text-[#F5F5F7]"
@@ -155,6 +156,7 @@ export function HeroSection() {
               textAlign="left"
             />
             <SplitText
+              key={`l2-${started}`}
               text="与液态玻璃，"
               tag="span"
               className="block text-[clamp(38px,5.1vw,62px)] font-[560] leading-[1.08] tracking-[-0.045em] text-[#F5F5F7]"
@@ -169,6 +171,7 @@ export function HeroSection() {
               textAlign="left"
             />
             <SplitText
+              key={`l3-${started}`}
               text="注入每一段轨迹。"
               tag="span"
               className="block text-[clamp(38px,5.1vw,62px)] font-[560] leading-[1.12] tracking-[-0.045em] text-[#9CA3AF]"
@@ -186,7 +189,7 @@ export function HeroSection() {
 
           <motion.p
             initial={{ opacity: 0, y: 10, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            animate={started ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 10, filter: 'blur(8px)' }}
             transition={{ duration: 1.2, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
             className="mt-7 max-w-[560px] text-[14.5px] leading-[1.9] text-white/48 sm:text-[15.5px]"
           >
@@ -195,7 +198,7 @@ export function HeroSection() {
 
           <motion.div
             initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={started ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
             transition={{ duration: 1, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
             className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
           >
@@ -253,7 +256,7 @@ export function HeroSection() {
 
           <motion.div
             initial={{ opacity: 0, y: 38, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            animate={started ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 38, scale: 0.96 }}
             transition={{ duration: 1.3, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="relative mx-auto w-full max-w-[336px]"
           >

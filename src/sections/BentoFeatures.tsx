@@ -17,7 +17,8 @@ import GlassIcons from '@/components/reactbits/GlassIcons';
 import GlassSurface from '@/components/reactbits/GlassSurface';
 import TrueFocus from '@/components/reactbits/TrueFocus';
 import { usePerformance } from '@/components/common/PerformanceContext';
-import { Reveal, SectionHeader } from '@/components/common/SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
+import { StaggerIn } from '@/motion/StaggerIn';
 import { ViewportLazyMount } from '@/components/common/ViewportLazyMount';
 import { siteConfig } from '@/config/siteConfig';
 import { cn } from '@/lib/utils';
@@ -477,8 +478,8 @@ export function BentoFeatures() {
           }
         />
 
-        <div className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-12 md:gap-4">
-          <Reveal className="md:col-span-7" y={30}>
+        <StaggerIn className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-12 md:gap-4" stagger={0.1} distance={54} start="top 82%">
+          <div className="md:col-span-7">
             <BentoCard
               eyebrow={byId('agsl').eyebrow}
               title={byId('agsl').title}
@@ -488,9 +489,9 @@ export function BentoFeatures() {
             >
               <AgslVisual />
             </BentoCard>
-          </Reveal>
+          </div>
 
-          <Reveal className="md:col-span-5" delay={0.08} y={30}>
+          <div className="md:col-span-5">
             <BentoCard
               eyebrow={byId('island').eyebrow}
               title={byId('island').title}
@@ -500,9 +501,9 @@ export function BentoFeatures() {
             >
               <IslandVisual />
             </BentoCard>
-          </Reveal>
+          </div>
 
-          <Reveal className="md:col-span-4" delay={0.04}>
+          <div className="md:col-span-4">
             <BentoCard
               eyebrow={byId('builder').eyebrow}
               title={byId('builder').title}
@@ -512,9 +513,9 @@ export function BentoFeatures() {
             >
               <RadarVisual />
             </BentoCard>
-          </Reveal>
+          </div>
 
-          <Reveal className="md:col-span-4" delay={0.1}>
+          <div className="md:col-span-4">
             <BentoCard
               eyebrow={byId('roam').eyebrow}
               title={byId('roam').title}
@@ -524,9 +525,9 @@ export function BentoFeatures() {
             >
               <RoamVisual />
             </BentoCard>
-          </Reveal>
+          </div>
 
-          <Reveal className="md:col-span-4" delay={0.16}>
+          <div className="md:col-span-4">
             <BentoCard
               eyebrow={byId('privacy').eyebrow}
               title={byId('privacy').title}
@@ -536,9 +537,9 @@ export function BentoFeatures() {
             >
               <PrivacyVisual />
             </BentoCard>
-          </Reveal>
+          </div>
 
-          <Reveal className="md:col-span-12" delay={0.05}>
+          <div className="md:col-span-12">
             <BentoCard
               eyebrow={byId('theme').eyebrow}
               title={byId('theme').title}
@@ -563,8 +564,8 @@ export function BentoFeatures() {
                 <ThemeVisual />
               </div>
             </BentoCard>
-          </Reveal>
-        </div>
+          </div>
+        </StaggerIn>
 
         <div className="mt-8 flex items-center justify-center">
           <a

@@ -5,6 +5,7 @@ import GradientText from '@/components/reactbits/GradientText';
 import StarBorder from '@/components/reactbits/StarBorder';
 import { usePerformance } from '@/components/common/PerformanceContext';
 import { LanyardPass } from '@/components/common/LanyardPass';
+import { Parallax } from '@/motion/Parallax';
 import { Reveal } from '@/components/common/SectionHeader';
 import { ViewportLazyMount } from '@/components/common/ViewportLazyMount';
 import { formatSize, useLatestRelease } from '@/hooks/useLatestRelease';
@@ -360,11 +361,11 @@ export function DownloadAndLanyard() {
           </Reveal>
 
           <Reveal delay={0.12}>
-            <div className="relative h-[560px] w-full sm:h-[610px]">
+            <Parallax strength={70} scale className="relative h-[560px] w-full sm:h-[610px]">
               <div className="pointer-events-none absolute inset-x-10 top-16 bottom-10 -z-10 rounded-[50%] bg-[#38BDF8]/[0.07] blur-[70px]" />
               <LanyardPass image={front} />
 
-            </div>
+            </Parallax>
           </Reveal>
         </div>
       </div>

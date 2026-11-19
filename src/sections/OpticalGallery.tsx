@@ -3,6 +3,7 @@ import { MoveHorizontal, ScanLine } from 'lucide-react';
 import CircularGallery, { type GalleryItem } from '@/components/reactbits/CircularGallery';
 import Crosshair from '@/components/reactbits/Crosshair';
 import { usePerformance } from '@/components/common/PerformanceContext';
+import { MaskReveal } from '@/motion/MaskReveal';
 import { MockupFrame } from '@/components/common/MockupFrame';
 import { Reveal, SectionHeader } from '@/components/common/SectionHeader';
 import { ViewportLazyMount } from '@/components/common/ViewportLazyMount';
@@ -55,9 +56,10 @@ export function OpticalGallery() {
           description={siteConfig.gallery.subtitle}
         />
 
+        <MaskReveal className="mt-10 rounded-[32px]" duration={1.3} innerClassName="relative">
         <div
           ref={containerRef}
-          className="relative mt-10 h-[620px] w-full sm:h-[600px] lg:h-[600px]"
+          className="relative h-[620px] w-full sm:h-[600px] lg:h-[600px]"
         >
           <div className="pointer-events-none absolute inset-x-[10%] top-1/2 -z-10 h-40 -translate-y-1/2 rounded-[100%] bg-[#38BDF8]/[0.06] blur-[70px]" />
 
@@ -130,6 +132,7 @@ export function OpticalGallery() {
             </span>
           </div>
         </div>
+        </MaskReveal>
 
         <Reveal className="mt-8">
           <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
