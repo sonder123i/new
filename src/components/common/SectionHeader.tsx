@@ -28,20 +28,20 @@ export function SectionHeader({
         className,
       )}
     >
-      <div className={cn('max-w-[720px]', align === 'center' && 'flex flex-col items-center')}>
-        <TitleSlam delay={0.05} distance={64} duration={1.15}>
-          <div className={cn('flex items-center gap-3', align === 'center' && 'justify-center')}>
-            {index ? <span className="font-mono text-[11px] tracking-[0.2em] text-white/25">{index}</span> : null}
-            <span className="h-px w-8 bg-gradient-to-r from-[#38BDF8]/70 to-transparent" />
-            <span className="mono-label text-[#7DD3FC]/70">{eyebrow}</span>
+      <div className={cn('max-w-[700px]', align === 'center' && 'flex flex-col items-center')}>
+        <TitleSlam delay={0} distance={14} duration={0.55}>
+          <div className={cn('flex items-center gap-2.5', align === 'center' && 'justify-center')}>
+            {index ? <span className="font-mono text-[11px] tracking-[0.16em] text-white/40">{index}</span> : null}
+            <span className="h-px w-6 bg-white/25" />
+            <span className="mono-label text-white/70">{eyebrow}</span>
           </div>
         </TitleSlam>
-        <TitleSlam delay={0.16} distance={110} duration={1.3}>
-          <h2 className="display mt-5 text-[clamp(30px,3.6vw,48px)] text-white">{title}</h2>
+        <TitleSlam delay={0.05} distance={20} duration={0.62}>
+          <h2 className="display mt-4 text-[clamp(30px,3.8vw,48px)] text-[#F5F5F7]">{title}</h2>
         </TitleSlam>
         {description ? (
-          <TitleSlam delay={0.3} distance={54} duration={1.1}>
-            <p className="mt-4 max-w-[560px] text-[14.5px] leading-[1.85] text-white/45">{description}</p>
+          <TitleSlam delay={0.1} distance={16} duration={0.58}>
+            <p className="mt-4 max-w-[540px] text-[15px] leading-[1.75] text-white/65">{description}</p>
           </TitleSlam>
         ) : null}
       </div>
@@ -53,7 +53,7 @@ export function SectionHeader({
 export function Reveal({
   children,
   delay = 0,
-  y = 26,
+  y = 16,
   className,
 }: {
   children: ReactNode;
@@ -63,10 +63,10 @@ export function Reveal({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y, scale: 0.985 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 1.05, delay, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.55, delay: Math.min(delay, 0.2), ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >
       {children}
@@ -74,7 +74,6 @@ export function Reveal({
   );
 }
 
-/** 跟随指针的玻璃光斑容器 */
 export function useSpotlight<T extends HTMLElement>() {
   const ref = useRef<T>(null);
   const onPointerMove = (event: React.PointerEvent<T>) => {

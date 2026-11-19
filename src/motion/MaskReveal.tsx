@@ -2,18 +2,13 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { EASE, gsap, motionAllowed } from '@/motion/gsap';
 import { cn } from '@/lib/utils';
 
-/**
- * 遮罩揭示：内容被一块同色面板盖住，进入视口时面板沿自身方向滑出，
- * 同时内容从下方略微上浮——比单纯淡入更有「被揭开」的物理感。
- *
- * 面板与内容同色背景，避免出现灰色方块；只做 transform，不触发重排。
- */
+/** 用纯 GPU 合成的 clip-path 替代实色黑块，消除在渐变/光晕背景上的矩形补丁感 */
 export function MaskReveal({
   children,
   className,
   innerClassName,
   delay = 0,
-  duration = 1.15,
+  duration = 0.65,
   from = 'bottom',
   once = true,
 }: {
@@ -26,57 +21,56 @@ export function MaskReveal({
   once?: boolean;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const maskRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const root = rootRef.current;
-    const mask = maskRef.current;
     const content = contentRef.current;
-    if (!root || !mask || !content) return;
+    if (!root || !content) return;
 
     if (!motionAllowed()) {
-      gsap.set(mask, { autoAlpha: 0 });
-      gsap.set(content, { autoAlpha: 1, y: 0 });
+      gsap.set(content, { autoAlpha: 1, y: 0, x: 0, clipPath: 'inset(0% 0% 0% 0%)' });
       return;
     }
 
-    const axis = from === 'left' ? 'xPercent' : 'yPercent';
-    const dir = from === 'top' ? -101 : from === 'left' ? -101 : 101;
+    const initialClip =
+      from === 'top'
+        ? 'inset(0% 0% 100% 0%)'
+        : from === 'left'
+          ? 'inset(0% 100% 0% 0%)'
+          : 'inset(100% 0% 0% 0%)';
 
     const ctx = gsap.context(() => {
-      gsap.set(content, { autoAlpha: 0, y: from === 'left' ? 0 : 34, x: from === 'left' ? -26 : 0 });
-
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: root, start: 'top 88%', once },
-        delay,
-      });
-      tl.fromTo(
-        mask,
-        { [axis]: 0 },
-        { [axis]: dir, duration, ease: EASE.reveal },
-      )
-        .to(
-          content,
-          { autoAlpha: 1, y: 0, x: 0, duration: duration * 0.9, ease: EASE.reveal },
-          '<0.12',
-        )
-        .set(mask, { autoAlpha: 0 });
+      gsap.fromTo(
+        content,
+        {
+          autoAlpha: 0,
+          y: from === 'left' ? 0 : 14,
+          x: from === 'left' ? -14 : 0,
+          clipPath: initialClip,
+        },
+        {
+          autoAlpha: 1,
+          y: 0,
+          x: 0,
+          clipPath: 'inset(0% 0% 0% 0%)',
+          duration: Math.min(duration, 0.72),
+          delay: Math.min(delay, 0.2),
+          ease: EASE.reveal,
+          clearProps: 'transform,clipPath',
+          scrollTrigger: { trigger: root, start: 'top 90%', once },
+        },
+      );
     }, root);
 
     return () => ctx.revert();
   }, [delay, duration, from, once]);
 
   return (
-    <div ref={rootRef} className={cn('relative overflow-hidden', className)}>
+    <div ref={rootRef} className={cn('relative', className)}>
       <div ref={contentRef} className={innerClassName}>
         {children}
       </div>
-      <div
-        ref={maskRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[#050507]"
-      />
     </div>
   );
 }
