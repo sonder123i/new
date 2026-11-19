@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   ArrowUpRight,
-  Code2,
   Crosshair,
   Gauge,
   Moon,
@@ -13,19 +12,13 @@ import {
 } from 'lucide-react';
 import AnimatedList, { type AnimatedListEntry } from '@/components/reactbits/AnimatedList';
 import DecryptedText from '@/components/reactbits/DecryptedText';
-import GlassIcons from '@/components/reactbits/GlassIcons';
 import GlassSurface from '@/components/reactbits/GlassSurface';
-import TrueFocus from '@/components/reactbits/TrueFocus';
 import { usePerformance } from '@/components/common/PerformanceContext';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { StaggerIn } from '@/motion/StaggerIn';
 import { ViewportLazyMount } from '@/components/common/ViewportLazyMount';
 import { siteConfig } from '@/config/siteConfig';
 import { cn } from '@/lib/utils';
-
-/* ------------------------------------------------------------------ */
-/* 卡片基础壳                                                           */
-/* ------------------------------------------------------------------ */
 
 function BentoCard({
   children,
@@ -57,105 +50,105 @@ function BentoCard({
       ref={ref}
       onPointerMove={onPointerMove}
       className={cn(
-        'spotlight-surface group relative flex min-h-[330px] flex-col justify-end overflow-hidden rounded-[26px]',
-        'border border-white/[0.075] bg-[linear-gradient(180deg,#0b0c11,#08090d)]',
-        'transition-[border-color,transform] duration-500 hover:border-white/[0.16]',
+        'spotlight-surface group relative flex min-h-[336px] flex-col justify-end overflow-hidden rounded-[24px]',
+        'border border-white/[0.085] bg-[linear-gradient(180deg,#0d0e13,#090a0e)]',
+        'transition-[border-color] duration-300 hover:border-white/[0.18]',
         className,
       )}
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
       <div className={cn('relative z-0 min-h-0 flex-1', visualClassName)}>{children}</div>
-      <div className="relative z-10 bg-gradient-to-t from-[#08090d] via-[#08090d]/92 to-transparent p-5 pt-12">
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-[9.5px] uppercase tracking-[0.22em] text-[#7DD3FC]/60">{eyebrow}</span>
-          <span className="h-px flex-1 bg-gradient-to-r from-white/12 to-transparent" />
-        </div>
-        <h3 className="mt-3 text-[17px] font-medium tracking-[-0.02em] text-white/92">{title}</h3>
-        <p className="mt-2 text-[12.5px] leading-[1.8] text-white/42">{body}</p>
+      <div className="relative z-10 bg-gradient-to-t from-[#090a0e] via-[#090a0e]/95 to-transparent p-6 pt-12">
+        <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-white/50">{eyebrow}</span>
+        <h3 className="mt-2 text-[18px] font-semibold tracking-[-0.02em] text-[#F5F5F7]">{title}</h3>
+        <p className="mt-2 text-[13.5px] leading-[1.7] text-white/60">{body}</p>
       </div>
     </article>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* 1 · AGSL 液态玻璃                                                    */
-/* ------------------------------------------------------------------ */
-
 function AgslVisual() {
+  const { isFlagship } = usePerformance();
+
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(80%_100%_at_50%_0%,rgba(56,189,248,0.09),transparent_60%)]" />
-      <svg viewBox="0 0 700 360" className="absolute inset-0 h-full w-full" fill="none" preserveAspectRatio="xMidYMid slice">
-        {Array.from({ length: 15 }).map((_, index) => (
+      <svg
+        viewBox="0 0 700 360"
+        className="absolute inset-0 h-full w-full opacity-90"
+        fill="none"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        {Array.from({ length: 12 }).map((_, index) => (
           <ellipse
             key={index}
-            cx={330 + Math.sin(index * 1.7) * 14}
-            cy={168 + Math.cos(index * 1.3) * 10}
-            rx={54 + index * 21}
-            ry={30 + index * 14}
-            transform={`rotate(${-12 + Math.sin(index) * 4} 330 168)`}
-            stroke={index === 4 ? 'rgba(125,211,252,0.35)' : 'rgba(255,255,255,0.085)'}
-            strokeWidth={index === 4 ? 1.3 : 1}
+            cx={340 + Math.sin(index * 1.6) * 10}
+            cy={162 + Math.cos(index * 1.2) * 8}
+            rx={62 + index * 24}
+            ry={32 + index * 15}
+            transform={`rotate(${-10 + Math.sin(index) * 3} 340 162)`}
+            stroke={index === 4 ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.075)'}
+            strokeWidth={index === 4 ? 1.2 : 1}
           />
         ))}
-        <path d="M0 300 C 140 250, 220 330, 340 292 S 560 240, 700 288" stroke="rgba(255,255,255,0.06)" />
-        <path d="M0 320 C 150 282, 250 350, 360 316 S 570 268, 700 310" stroke="rgba(255,255,255,0.045)" />
       </svg>
 
-      <div className="absolute left-1/2 top-[34%] -translate-x-1/2 -translate-y-1/2">
-        <GlassSurface
-          width={250}
-          height={92}
-          borderRadius={46}
-          borderWidth={0.09}
-          brightness={54}
-          opacity={0.9}
-          blur={9}
-          displace={1.2}
-          backgroundOpacity={0.03}
-          saturation={1.6}
-          distortionScale={-140}
-          redOffset={6}
-          greenOffset={14}
-          blueOffset={24}
-          refraction
-          mixBlendMode="screen"
-        >
-          <div className="flex flex-col items-center gap-1">
-            <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-white/85">AGSL · LIQUID GLASS</span>
-            <span className="font-mono text-[8.5px] uppercase tracking-[0.24em] text-white/45">RuntimeShader · SDF ROUND</span>
+      <div className="absolute left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2">
+        {isFlagship ? (
+          <ViewportLazyMount className="h-[88px] w-[252px]" rootMargin="200px 0px" unmountDelay={500}>
+            <GlassSurface
+              width={252}
+              height={88}
+              borderRadius={44}
+              borderWidth={0.08}
+              brightness={56}
+              opacity={0.92}
+              blur={10}
+              displace={1.0}
+              backgroundOpacity={0.04}
+              saturation={1.35}
+              distortionScale={-120}
+              redOffset={4}
+              greenOffset={10}
+              blueOffset={16}
+              refraction
+              mixBlendMode="screen"
+            >
+              <div className="flex flex-col items-center gap-1">
+                <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-white/92">
+                  AGSL · LIQUID GLASS
+                </span>
+                <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/55">
+                  RuntimeShader · 120Hz
+                </span>
+              </div>
+            </GlassSurface>
+          </ViewportLazyMount>
+        ) : (
+          <div className="glass-panel flex h-[88px] w-[252px] flex-col items-center justify-center gap-1 rounded-full">
+            <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-white/92">
+              AGSL · LIQUID GLASS
+            </span>
+            <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/55">
+              RuntimeShader · 120Hz
+            </span>
           </div>
-        </GlassSurface>
+        )}
       </div>
-
-      <div className="absolute left-1/2 top-[34%] h-[180px] w-[360px] -translate-x-1/2 -translate-y-1/2 -z-10 rounded-full bg-[#38BDF8]/10 blur-[50px]" />
-
-      <span className="absolute left-4 top-4 font-mono text-[9px] uppercase tracking-[0.24em] text-white/25">
-        contour / refract
-      </span>
-      <span className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full border border-white/10 bg-black/30 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.18em] text-[#7DD3FC]/70">
-        <span className="h-1 w-1 rounded-full bg-[#38BDF8]" /> live
-      </span>
     </div>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* 2 · 悬浮岛                                                           */
-/* ------------------------------------------------------------------ */
-
 const islandEntries: AnimatedListEntry[] = siteConfig.islandMessages.map((message, index) => ({
   id: index,
   icon: (
-    <span
-      className={cn(
-        'flex h-6 w-6 items-center justify-center rounded-full',
-        message.tone === 'run' && 'bg-[#38BDF8]/14 text-[#7DD3FC]',
-        message.tone === 'info' && 'bg-[#818CF8]/14 text-[#A5B4FC]',
-        message.tone === 'warn' && 'bg-amber-300/10 text-amber-200/80',
+    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.08] text-white/80">
+      {message.tone === 'run' ? (
+        <Radio className="h-3 w-3" />
+      ) : message.tone === 'info' ? (
+        <Waves className="h-3 w-3" />
+      ) : (
+        <Zap className="h-3 w-3" />
       )}
-    >
-      {message.tone === 'run' ? <Radio className="h-3 w-3" /> : message.tone === 'info' ? <Waves className="h-3 w-3" /> : <Zap className="h-3 w-3" />}
     </span>
   ),
   title: message.text,
@@ -164,42 +157,55 @@ const islandEntries: AnimatedListEntry[] = siteConfig.islandMessages.map((messag
 }));
 
 function IslandVisual() {
-  const [items, setItems] = useState<AnimatedListEntry[]>(islandEntries);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const [items, setItems] = useState<AnimatedListEntry[]>(islandEntries.slice(0, 3));
   const cursor = useRef(0);
 
+  // 仅在卡片进入视口时运行轮播，离屏零 CPU 占用
   useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.15,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
     const timer = window.setInterval(() => {
       cursor.current = (cursor.current + 1) % islandEntries.length;
       const next = islandEntries[cursor.current];
       setItems((prev) => [{ ...next, id: `${next.id}-${Date.now()}` }, ...prev].slice(0, 3));
-    }, 2600);
+    }, 3600);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [inView]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden px-4 pt-4">
-      <div className="absolute inset-0 bg-[radial-gradient(90%_80%_at_50%_0%,rgba(129,140,248,0.1),transparent_65%)]" />
-      <div className="relative flex items-center justify-between rounded-full border border-white/12 bg-[#0d1016]/85 px-3 py-2 backdrop-blur-xl">
-        <div className="flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/6">
-            <span className="h-2.5 w-2.5 rounded-full border border-white/70" />
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden px-5 pt-5">
+      <div className="relative flex items-center justify-between rounded-full border border-white/12 bg-white/[0.05] px-3.5 py-2 backdrop-blur-md">
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10">
+            <span className="h-2 w-2 rounded-full bg-white/85" />
           </span>
           <div className="flex flex-col leading-none">
-            <span className="text-[10.5px] text-white/88">云迹 · 模拟运行中</span>
-            <span className="mt-0.5 font-mono text-[8px] text-white/38">5'40" · 0.85 / 3.00 km</span>
+            <span className="text-[11.5px] font-medium text-white/90">云迹 · 模拟运行中</span>
+            <span className="mt-1 font-mono text-[9.5px] text-white/50 tabular">5&apos;40&quot; · 0.85 / 3.00 km</span>
           </div>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/6">
-            <Gauge className="h-2.5 w-2.5 text-white/65" />
+        <div className="flex items-center gap-1.5">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.07]">
+            <Gauge className="h-3 w-3 text-white/75" />
           </span>
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/6">
-            <Crosshair className="h-2.5 w-2.5 text-white/45" />
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.07]">
+            <Crosshair className="h-3 w-3 text-white/60" />
           </span>
         </div>
       </div>
 
-      <div className="relative mt-3">
+      <div className="relative mt-3.5">
         <AnimatedList
           items={items}
           renderItem={(item) => {
@@ -208,148 +214,145 @@ function IslandVisual() {
               <div className="flex w-full items-center gap-2.5">
                 {item.icon}
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-[10.5px] text-white/72">{item.title}</div>
+                  <div className="truncate text-[11.5px] text-white/80">{item.title}</div>
                 </div>
-                <span className="font-mono text-[8px] text-white/25">{item.meta}</span>
+                <span className="font-mono text-[9.5px] text-white/40">{item.meta}</span>
               </div>
             );
           }}
           animation="slide"
-          stagger={0.06}
+          stagger={0.05}
           showGradients={false}
           displayScrollbar={false}
           frame={false}
           theme="dark"
-          accentColor="#38BDF8"
+          accentColor="#E4E4E7"
           gap={6}
           radius={12}
-          maxHeight={190}
+          maxHeight={185}
           className="island-list !bg-transparent"
         />
       </div>
-
-      <span className="absolute bottom-3 right-4 font-mono text-[8.5px] uppercase tracking-[0.2em] text-white/22">
-        cross-app · 3 states
-      </span>
     </div>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* 3 · 建圈器                                                           */
-/* ------------------------------------------------------------------ */
-
 function RadarVisual() {
   return (
     <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_40%,rgba(56,189,248,0.08),transparent_65%)]" />
-      <div className="relative aspect-square w-[68%] max-w-[190px]">
-        <div className="absolute inset-0 rounded-full border border-white/10" />
-        <div className="absolute inset-[14%] rounded-full border border-white/[0.08]" />
-        <div className="absolute inset-[30%] rounded-full border border-white/[0.07]" />
-        <div className="absolute inset-[46%] rounded-full border border-[#38BDF8]/25" />
+      <div className="relative aspect-square w-[64%] max-w-[180px]">
+        <div className="absolute inset-0 rounded-full border border-white/12" />
+        <div className="absolute inset-[16%] rounded-full border border-white/[0.09]" />
+        <div className="absolute inset-[34%] rounded-full border border-white/[0.08]" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="h-full w-px bg-white/[0.07]" />
           <div className="absolute h-px w-full bg-white/[0.07]" />
         </div>
+        {/* 极慢扫描，降低视觉干扰 */}
         <div className="absolute inset-0 overflow-hidden rounded-full">
           <div
-            className="absolute inset-[-25%] animate-[spin_7s_linear_infinite] rounded-full"
+            className="absolute inset-[-25%] animate-[spin_10s_linear_infinite] rounded-full"
             style={{
-              background: 'conic-gradient(from 0deg, rgba(56,189,248,0.32), rgba(56,189,248,0.06) 46deg, transparent 92deg)',
+              background:
+                'conic-gradient(from 0deg, rgba(255,255,255,0.22), rgba(255,255,255,0.04) 44deg, transparent 86deg)',
               maskImage: 'radial-gradient(circle, #000 62%, transparent 72%)',
             }}
           />
         </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-mono text-[24px] font-light leading-none tracking-[-0.03em] text-white/90 tabular">400<span className="ml-0.5 text-[10px] text-white/40">m</span></span>
-          <span className="mt-1.5 font-mono text-[8.5px] uppercase tracking-[0.2em] text-[#7DD3FC]/70">0° 合焦</span>
+          <span className="font-mono text-[24px] font-medium leading-none tracking-[-0.03em] text-white tabular">
+            400<span className="ml-0.5 text-[11px] text-white/50">m</span>
+          </span>
+          <span className="mt-1.5 font-mono text-[9.5px] tracking-[0.14em] text-white/60">±1m 合焦</span>
         </div>
-        <div className="absolute right-[6%] top-[12%] rounded-full border border-white/10 bg-black/40 px-2 py-0.5 font-mono text-[8px] text-white/50">
-          R400
-        </div>
-        <div className="absolute bottom-[9%] left-[2%] rounded-full border border-white/10 bg-black/40 px-2 py-0.5 font-mono text-[8px] text-white/50">
-          ±1m
-        </div>
-      </div>
-      <div className="absolute inset-x-5 bottom-5 flex items-end justify-between font-mono text-[8px] uppercase tracking-[0.18em] text-white/22">
-        <span>vernier</span>
-        <span>clockwise</span>
       </div>
     </div>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* 4 · 自由漫游                                                         */
-/* ------------------------------------------------------------------ */
-
+/** 零 React 重渲染：指针移动直接驱动 GPU translate3d */
 function RoamVisual() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ x: 48, y: 52 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
+
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const box = containerRef.current;
+    const dot = dotRef.current;
+    if (!box || !dot) return;
+    const rect = box.getBoundingClientRect();
+    const dx = ((event.clientX - rect.left) / rect.width - 0.5) * 28;
+    const dy = ((event.clientY - rect.top) / rect.height - 0.5) * 22;
+    dot.style.transform = `translate3d(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px), 0)`;
+  };
+
+  const onPointerLeave = () => {
+    if (dotRef.current) {
+      dotRef.current.style.transform = 'translate3d(-50%, -50%, 0)';
+    }
+  };
 
   return (
     <div
-      ref={ref}
+      ref={containerRef}
       className="absolute inset-0 overflow-hidden"
-      onPointerMove={(event) => {
-        const rect = ref.current?.getBoundingClientRect();
-        if (!rect) return;
-        setPos({
-          x: 46 + ((event.clientX - rect.left) / rect.width - 0.5) * 10,
-          y: 50 + ((event.clientY - rect.top) / rect.height - 0.5) * 10,
-        });
-      }}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
     >
-      <div className="absolute inset-0 bg-[#0a0c11]" />
-      <svg viewBox="0 0 400 300" className="absolute inset-0 h-full w-full" fill="none" preserveAspectRatio="xMidYMid slice">
-        <g stroke="rgba(255,255,255,0.055)" strokeWidth="1">
-          {Array.from({ length: 9 }).map((_, index) => (
-            <path key={`h${index}`} d={`M-20 ${20 + index * 34} L 420 ${6 + index * 34}`} />
+      <svg
+        viewBox="0 0 400 300"
+        className="absolute inset-0 h-full w-full"
+        fill="none"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <g stroke="rgba(255,255,255,0.05)" strokeWidth="1">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <path key={`h${index}`} d={`M-20 ${24 + index * 36} L 420 ${10 + index * 36}`} />
           ))}
-          {Array.from({ length: 11 }).map((_, index) => (
-            <path key={`v${index}`} d={`M${-10 + index * 38} -20 L ${26 + index * 38} 320`} />
+          {Array.from({ length: 10 }).map((_, index) => (
+            <path key={`v${index}`} d={`M${-10 + index * 42} -20 L ${24 + index * 42} 320`} />
           ))}
         </g>
-        <path d="M-20 210 C 80 176, 150 244, 240 206 S 350 162, 420 196" stroke="rgba(255,255,255,0.16)" strokeWidth="5" strokeLinecap="round" />
-        <path d="M-20 210 C 80 176, 150 244, 240 206 S 350 162, 420 196" stroke="rgba(255,255,255,0.28)" strokeWidth="1.4" strokeLinecap="round" />
-        <path d="M110 -20 C 128 74, 96 150, 132 226 S 156 286, 138 320" stroke="rgba(255,255,255,0.12)" strokeWidth="3.5" strokeLinecap="round" />
-        <path d="M300 -20 C 282 60, 322 130, 296 206 S 268 280, 292 320" stroke="rgba(255,255,255,0.1)" strokeWidth="2.5" strokeLinecap="round" />
-        <path d="M24 262 C 92 240, 140 268, 196 246" stroke="rgba(56,189,248,0.45)" strokeWidth="1.2" strokeDasharray="3 5" />
+        <path
+          d="M-20 206 C 80 176, 150 238, 240 202 S 350 162, 420 194"
+          stroke="rgba(255,255,255,0.18)"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        <path
+          d="M24 256 C 96 232, 146 258, 206 238"
+          stroke="rgba(255,255,255,0.45)"
+          strokeWidth="1.2"
+          strokeDasharray="3 5"
+        />
       </svg>
 
       <div
-        className="absolute z-10 -translate-x-1/2 -translate-y-1/2 transition-transform duration-500 ease-out"
-        style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+        ref={dotRef}
+        className="pointer-events-none absolute left-1/2 top-[44%] z-10 transition-transform duration-300 ease-out will-change-transform"
+        style={{ transform: 'translate3d(-50%, -50%, 0)' }}
       >
-        <span className="absolute inset-0 -m-5 rounded-full border border-[#38BDF8]/25" />
-        <span className="absolute inset-0 -m-2.5 rounded-full border border-[#38BDF8]/35" />
-        <span className="relative block h-2 w-2 rounded-full bg-[#EAFBFE] shadow-[0_0_14px_4px_rgba(56,189,248,0.55)]" />
-      </div>
-
-      <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/40 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/45 backdrop-blur">
-        free roam · 300m
+        <span className="absolute inset-0 -m-5 rounded-full border border-white/15" />
+        <span className="absolute inset-0 -m-2.5 rounded-full border border-white/30" />
+        <span className="relative block h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_16px_3px_rgba(255,255,255,0.45)]" />
       </div>
 
       <div className="absolute inset-x-4 bottom-3">
-        <div className="rounded-xl border border-white/8 bg-black/35 px-2.5 py-2 backdrop-blur-md">
+        <div className="rounded-xl border border-white/10 bg-black/45 px-3 py-2 backdrop-blur-md">
           <DecryptedText
             text="39.90152° N, 116.40685° E"
-            animateOn="view"
-            loop
-            loopDelay={2600}
-            speed={34}
-            maxIterations={14}
+            animateOn="hover"
+            loop={false}
+            speed={28}
+            maxIterations={10}
             revealDirection="start"
             useOriginalCharsOnly
             characters="0123456789°NESW., "
-            className="font-mono text-[9px] tracking-[0.04em] text-[#A1A1AA]"
-            encryptedClassName="text-[#38BDF8]/60"
-            scrambleColor="#7DD3FC"
+            className="font-mono text-[10.5px] tracking-[0.04em] text-white/80"
+            encryptedClassName="text-white/40"
           />
-          <div className="mt-1 flex items-center justify-between font-mono text-[8px] uppercase tracking-[0.16em] text-white/25">
-            <span>walk 1.4 m/s</span>
-            <span>smooth · 300m</span>
+          <div className="mt-1 flex items-center justify-between font-mono text-[9.5px] text-white/45">
+            <span>1.4 m/s 拟真步速</span>
+            <span>300m 半径</span>
           </div>
         </div>
       </div>
@@ -357,99 +360,89 @@ function RoamVisual() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* 5 · 隐私                                                             */
-/* ------------------------------------------------------------------ */
-
+/** 去掉循环跳框的 TrueFocus，用安静、高可信度的架构徽章表达隐私承诺 */
 function PrivacyVisual() {
+  const pillars = ['无账号体系', '无遥测上报', '纯本地运行'];
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 overflow-hidden px-4">
-      <div className="absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_45%,rgba(56,189,248,0.07),transparent_70%)]" />
-      <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
-        <ShieldCheck className="h-5 w-5 text-[#7DD3FC]/80" />
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-5">
+      <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/14 bg-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.22)]">
+        <ShieldCheck className="h-5 w-5 text-white/90" />
       </span>
-      <TrueFocus
-        sentence="无账号 无上传 纯本地"
-        separator=" "
-        manualMode={false}
-        focusStyle="brackets"
-        order="sequential"
-        easing="smooth"
-        blurAmount={4}
-        focusScale={1.08}
-        borderColor="#38BDF8"
-        glowColor="rgba(56,189,248,0.35)"
-        animationDuration={0.8}
-        pauseBetweenAnimations={1.1}
-        cornerSize={7}
-        borderWidth={1.4}
-        unfocusedOpacity={0.32}
-      />
-      <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-white/22">local only · zero telemetry</span>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* 6 · 双生主题                                                         */
-/* ------------------------------------------------------------------ */
-
-function ThemeVisual() {
-  const { isFlagship } = usePerformance();
-  const icons = [
-    { icon: <Sun className="h-5 w-5" />, label: '日光白', color: '#E2E8F0' },
-    { icon: <Moon className="h-5 w-5" />, label: '曜石黑', color: '#818CF8' },
-    { icon: <Gauge className="h-5 w-5" />, label: '120Hz', color: '#38BDF8' },
-    { icon: <Code2 className="h-5 w-5" />, label: '开源', color: '#A5B4FC' },
-  ];
-
-  if (!isFlagship) {
-    return (
-      <div className="flex h-full items-center justify-end gap-3 pr-6">
-        {icons.map((item) => (
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {pillars.map((label) => (
           <span
-            key={item.label}
-            className="flex h-14 w-14 items-center justify-center rounded-[18px] border border-white/12 bg-white/[0.05] text-white/70"
+            key={label}
+            className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] font-medium text-white/80 transition-colors duration-300 group-hover:border-white/20 group-hover:text-white"
           >
-            {item.icon}
+            {label}
           </span>
         ))}
       </div>
-    );
-  }
-
-  return (
-    <div className="flex h-full items-center justify-end pr-2 sm:pr-5">
-      <ViewportLazyMount className="h-[190px] w-[300px]" unmountDelay={600}>
-        <GlassIcons
-          items={icons}
-          size={58}
-          gap={18}
-          columns={4}
-          roundness={0.42}
-          refraction={0.55}
-          bevel={0.4}
-          dispersion={0.3}
-          frost={0.16}
-          shine={0.65}
-          tint="#9AA6B8"
-          tintOpacity={0.22}
-          iconColor="rgba(245,245,247,0.85)"
-          plate="tilt"
-          tilt={14}
-          spread={0.5}
-          hover="float"
-          parallax={0.4}
-          labels="hover"
-          intro
-          theme="dark"
-        />
-      </ViewportLazyMount>
     </div>
   );
 }
 
-/* ------------------------------------------------------------------ */
+/** 用真实可点击的「日光白 / 曜石黑」主题切换取代耗 GPU 的 WebGL GlassIcons */
+function ThemeVisual() {
+  const [mode, setMode] = useState<'night' | 'day'>('night');
+  const isDay = mode === 'day';
+
+  return (
+    <div className="flex h-full flex-col justify-between gap-4 p-6 md:flex-row md:items-center">
+      <div className="flex items-center gap-2 self-start rounded-full border border-white/12 bg-white/[0.04] p-1">
+        <button
+          type="button"
+          onClick={() => setMode('day')}
+          className={cn(
+            'flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-medium transition-all duration-300',
+            isDay ? 'bg-[#F5F5F7] text-[#090A0E] shadow-sm' : 'text-white/60 hover:text-white',
+          )}
+        >
+          <Sun className="h-3.5 w-3.5" />
+          日光白
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode('night')}
+          className={cn(
+            'flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-medium transition-all duration-300',
+            !isDay ? 'bg-white/[0.14] text-white shadow-sm' : 'text-white/60 hover:text-white',
+          )}
+        >
+          <Moon className="h-3.5 w-3.5" />
+          曜石黑
+        </button>
+      </div>
+
+      {/* 实时预览条 */}
+      <div
+        className={cn(
+          'flex items-center gap-4 rounded-2xl border px-4 py-3 transition-all duration-500',
+          isDay
+            ? 'border-black/10 bg-[#F4F5F7] text-[#0B0C10] shadow-[0_16px_40px_-16px_rgba(255,255,255,0.35)]'
+            : 'border-white/12 bg-white/[0.05] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]',
+        )}
+      >
+        <div className="flex flex-col">
+          <span className={cn('font-mono text-[10px] uppercase tracking-[0.14em]', isDay ? 'text-black/45' : 'text-white/45')}>
+            {isDay ? 'DAYLIGHT GLASS' : 'OBSIDIAN GLASS'}
+          </span>
+          <span className="mt-0.5 text-[13px] font-medium">
+            {isDay ? '高透冷白折射 · 户外强光可读' : '深空低眩光 · 夜间护眼高对比'}
+          </span>
+        </div>
+        <span
+          className={cn(
+            'rounded-full px-2.5 py-1 font-mono text-[10.5px] tabular',
+            isDay ? 'bg-black/[0.07] text-black/70' : 'bg-white/[0.1] text-white/80',
+          )}
+        >
+          120Hz
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export function BentoFeatures() {
   const features = siteConfig.features;
@@ -457,35 +450,33 @@ export function BentoFeatures() {
 
   return (
     <section id="features" className="relative overflow-hidden py-24 sm:py-32">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(129,140,248,0.045),transparent_65%)]" />
-      <div className="relative mx-auto w-full max-w-[1240px] px-6 sm:px-8">
+      <div className="relative mx-auto w-full max-w-[1200px] px-6 sm:px-8">
         <SectionHeader
           index="03"
           eyebrow="CORE OPTICS"
           title={
             <>
-              六块可玩的光学卡片，
+              六项核心光学与轨迹能力，
               <br className="hidden sm:block" />
-              <span className="text-white/42">每一块都能伸手进去。</span>
+              <span className="text-white/50">每一处都为真实手感打磨。</span>
             </>
           }
-          description="不是功能清单，而是六个可以触摸的物理材质。悬停、拖拽、解码、合焦——所有交互都在为「真实感」服务。"
-          aside={
-            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#38BDF8] animate-pulse-dot" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">interactive</span>
-            </div>
-          }
+          description="从 120Hz 边缘折射、跨应用悬浮岛到 1 米级游标套模，全部以纯本地原生渲染实现。"
         />
 
-        <StaggerIn className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-12 md:gap-4" stagger={0.1} distance={54} start="top 82%">
+        <StaggerIn
+          className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-12"
+          stagger={0.06}
+          distance={20}
+          start="top 88%"
+        >
           <div className="md:col-span-7">
             <BentoCard
               eyebrow={byId('agsl').eyebrow}
               title={byId('agsl').title}
               body={byId('agsl').body}
               className="min-h-[380px]"
-              visualClassName="min-h-[240px]"
+              visualClassName="min-h-[220px]"
             >
               <AgslVisual />
             </BentoCard>
@@ -497,7 +488,7 @@ export function BentoFeatures() {
               title={byId('island').title}
               body={byId('island').body}
               className="min-h-[380px]"
-              visualClassName="min-h-[240px]"
+              visualClassName="min-h-[220px]"
             >
               <IslandVisual />
             </BentoCard>
@@ -509,7 +500,7 @@ export function BentoFeatures() {
               title={byId('builder').title}
               body={byId('builder').body}
               className="min-h-[350px]"
-              visualClassName="min-h-[210px]"
+              visualClassName="min-h-[195px]"
             >
               <RadarVisual />
             </BentoCard>
@@ -521,7 +512,7 @@ export function BentoFeatures() {
               title={byId('roam').title}
               body={byId('roam').body}
               className="min-h-[350px]"
-              visualClassName="min-h-[210px]"
+              visualClassName="min-h-[195px]"
             >
               <RoamVisual />
             </BentoCard>
@@ -533,7 +524,7 @@ export function BentoFeatures() {
               title={byId('privacy').title}
               body={byId('privacy').body}
               className="min-h-[350px]"
-              visualClassName="min-h-[210px]"
+              visualClassName="min-h-[195px]"
             >
               <PrivacyVisual />
             </BentoCard>
@@ -544,36 +535,21 @@ export function BentoFeatures() {
               eyebrow={byId('theme').eyebrow}
               title={byId('theme').title}
               body={byId('theme').body}
-              className="min-h-[240px] md:min-h-[230px]"
-              visualClassName="min-h-[120px]"
+              className="min-h-[230px]"
+              visualClassName="min-h-[110px]"
             >
-              <div className="grid h-full grid-cols-1 items-center md:grid-cols-[1fr_auto]">
-                <div className="hidden h-full items-center justify-start pl-6 md:flex">
-                  <div className="flex items-center gap-6">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/12 bg-[#F5F5F7] text-[#0B0F14] shadow-[0_16px_40px_-18px_rgba(255,255,255,0.35)]">
-                      <Sun className="h-5 w-5" />
-                    </span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/25">day</span>
-                    <span className="h-8 w-px bg-white/10" />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/25">night</span>
-                    <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/12 bg-[#0B0F14] text-white/80 shadow-[0_16px_40px_-18px_rgba(0,0,0,0.9)]">
-                      <Moon className="h-5 w-5" />
-                    </span>
-                  </div>
-                </div>
-                <ThemeVisual />
-              </div>
+              <ThemeVisual />
             </BentoCard>
           </div>
         </StaggerIn>
 
-        <div className="mt-8 flex items-center justify-center">
+        <div className="mt-10 flex justify-center">
           <a
             href="#workflow"
-            className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-white/45 transition-colors hover:border-white/20 hover:text-white/75"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-5 py-2.5 text-[12.5px] font-medium text-white/75 transition-colors hover:border-white/25 hover:text-white"
           >
-            see it in motion
-            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            查看完整工作流
+            <ArrowUpRight className="h-3.5 w-3.5 opacity-70 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </a>
         </div>
       </div>
