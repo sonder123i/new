@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { ChevronRight, MousePointer2 } from 'lucide-react';
 import CardSwap, { Card } from '@/components/reactbits/CardSwap';
 import GlareHover from '@/components/reactbits/GlareHover';
-import { usePerformance } from '@/components/common/PerformanceContext';
 import { MockupFrame } from '@/components/common/MockupFrame';
 import { Parallax } from '@/motion/Parallax';
 import { Reveal, SectionHeader } from '@/components/common/SectionHeader';
