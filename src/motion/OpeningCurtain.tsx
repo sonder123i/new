@@ -83,17 +83,21 @@ export function OpeningCurtain({ onDone }: { onDone?: () => void }) {
       aria-hidden="true"
       className="fixed inset-0 z-[200] flex items-center justify-center"
     >
-      {/* 三块面板，靠 stagger 形成斜向抽离 */}
-      <div className="absolute inset-0 grid grid-rows-3">
+      {/* 三块面板，靠 stagger 形成斜向抽离；略微重叠 1%，避免子像素接缝 */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[#04050a]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,rgba(56,189,248,0.05),transparent_70%)]" />
         {[0, 1, 2].map((index) => (
           <div
             key={index}
             data-curtain-panel
-            className="relative bg-[#04050a]"
-            style={{ willChange: 'transform' }}
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,rgba(56,189,248,0.05),transparent_70%)]" />
-          </div>
+            className="absolute inset-x-0 bg-[#04050a]"
+            style={{
+              top: `${index * 33}%`,
+              height: '34.5%',
+              willChange: 'transform',
+            }}
+          />
         ))}
       </div>
 
