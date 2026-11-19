@@ -340,7 +340,7 @@ export function DownloadAndLanyard() {
                   {release.sha256 || '—'}
                 </div>
                 <div className="mt-1.5 break-all font-mono text-[10px] leading-[1.7] text-white/24">
-                  apksigner verify --print-certs Go_{release.version.replace('v', '')}_arm64-v8a_release.apk
+                  apksigner verify --print-certs CloudTrace_{release.version.replace('v', '')}_arm64-v8a_release.apk
                 </div>
                 <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1">
                   <a

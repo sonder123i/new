@@ -176,19 +176,19 @@ export const siteConfig = {
     requirements: 'Android 8.0+ · 仅 arm64-v8a · GPL-3.0',
     /** Gitee 发行版直链：点击即下载 */
     giteeRepo: 'cloud-traces',
-    apk: 'https://gitee.com/sonder123i/cloud-traces/releases/download/v1.13.2/Go_1.13.2_arm64-v8a_release.apk',
+    apk: 'https://gitee.com/sonder123i/cloud-traces/releases/download/v1.13.3/CloudTrace_1.13.3_arm64-v8a_release.apk',
     apkMirror:
-      'https://github.com/sonder123i/CloudTrace/releases/download/v1.13.2/Go_1.13.2_arm64-v8a_release.apk',
+      'https://github.com/sonder123i/CloudTrace/releases/download/v1.13.3/CloudTrace_1.13.3_arm64-v8a_release.apk',
     fallbackRelease: {
-      tag: 'v1.13.2',
+      tag: 'v1.13.3',
       publishedAt: '2026-11-19',
       sizeKb: 14060,
-      sha256: 'd6e07718c4bd96c79389780c86c96b172f01a577c913a60f127e355d9dc72395',
+      sha256: '3b897317892b70618be8fe1439d5041b22d263d2feae3bfdbd1aaa97042fae0a',
       notes: [
-        '修复 Gitee 发行版下载的跳转域名，国内更新更稳',
-        '更新清单同时签名 GitHub 与 Gitee 双源',
-        '新增 Gitee CDN 域名单元测试，防止回归',
-        '协议措辞与 GPLv3 对齐，社区文件整理',
+        '安装包统一更名为 CloudTrace，不再沿用上游的 Go 前缀',
+        '签名不变，可直接覆盖安装 1.13.x',
+        'Gitee 与 GitHub 双源下载，国内直连',
+        '修复 Gitee 发行版下载的跳转域名',
       ],
     },
     lanyard: {
