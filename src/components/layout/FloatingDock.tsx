@@ -16,7 +16,7 @@ export function FloatingDock() {
       <div className="pointer-events-auto">
         <Dock
           position="bottom"
-          theme="dark"
+          theme="light"
           baseItemSize={42}
           magnification={60}
           panelHeight={54}
@@ -24,7 +24,7 @@ export function FloatingDock() {
           gap={6}
           roundness={0.85}
           showLabels
-          accentColor="#38BDF8"
+          accentColor="#0A0C10"
           items={[
             {
               label: '返回顶部',
