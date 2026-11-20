@@ -27,6 +27,8 @@ interface TextPressureProps {
   strokeWidth?: number;
   className?: string;
   minFontSize?: number;
+  /** 渲染标签；页脚水印等装饰性场景用 div，避免页面出现第二个 h1 */
+  as?: 'h1' | 'h2' | 'div';
 }
 
 interface Point {
@@ -130,8 +132,10 @@ const TextPressure: React.FC<TextPressureProps> = ({
   strokeWidth = 3,
   className = '',
 
-  minFontSize = 24
+  minFontSize = 24,
+  as: Tag = 'h1'
 }) => {
+  const Heading = Tag as unknown as 'h1';
   const containerRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const spansRef = useRef<(HTMLSpanElement | null)[]>([]);
@@ -413,7 +417,7 @@ const TextPressure: React.FC<TextPressureProps> = ({
           -webkit-text-stroke-color: var(--text-pressure-stroke-color);
         }
       `}</style>
-      <h1
+      <Heading
         ref={titleRef}
         aria-label={text}
         className={`text-pressure-title m-0 w-full uppercase text-center whitespace-nowrap select-none ${flex ? 'flex justify-between' : ''} ${stroke ? 'is-stroke' : ''} ${className}`}
@@ -432,7 +436,7 @@ const TextPressure: React.FC<TextPressureProps> = ({
             {char}
           </span>
         ))}
-      </h1>
+      </Heading>
     </div>
   );
 };

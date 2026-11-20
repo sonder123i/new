@@ -75,6 +75,7 @@ export function PressureFooter() {
         from="bottom"
       >
         <TextPressure
+          as="div"
           text="CLOUDTRACE"
           fontFamily="'Inter Variable', system-ui, sans-serif"
           fontUrl="data:text/css,"
