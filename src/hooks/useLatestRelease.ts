@@ -103,10 +103,19 @@ const isGitee = (mirror: ManifestMirror) =>
 const isGithub = (mirror: ManifestMirror) =>
   (mirror.id || '').toLowerCase() === 'gh' || (mirror.url || '').includes('github.com');
 
+/** 清单可能由外部流水线生成：去掉 URL 两侧误带的引号，只接受 http(s) 绝对地址 */
+const cleanMirrorUrl = (value?: string) => {
+  const url = (value || '')
+    .trim()
+    .replace(/^["'\u201c\u201d]+|["'\u201c\u201d]+$/g, '')
+    .trim();
+  return /^https?:\/\//i.test(url) ? url : '';
+};
+
 const fromManifest = (payload: ManifestPayload): LatestRelease => {
   const mirrors = payload.mirrors || [];
-  const gitee = mirrors.find(isGitee)?.url;
-  const github = mirrors.find(isGithub)?.url;
+  const gitee = cleanMirrorUrl(mirrors.find(isGitee)?.url);
+  const github = cleanMirrorUrl(mirrors.find(isGithub)?.url);
   return {
     version: payload.versionName ? `v${payload.versionName}` : fallback.version,
     publishedAt: formatDate(payload.publishedAt) || fallback.publishedAt,
@@ -139,8 +148,8 @@ const fromGithub = (data: GithubRelease): LatestRelease => {
     sizeKb: apk?.size ? Math.round(apk.size / 1024) : 0,
     // 只有与内置兜底版本一致时，兜底的 SHA-256 才可信
     sha256: matchesFallback ? fallback.sha256 : '',
-    downloadUrl: giteeUrl || apk?.browser_download_url || fallback.downloadUrl,
-    mirrorUrl: apk?.browser_download_url || fallback.mirrorUrl,
+    downloadUrl: giteeUrl || cleanMirrorUrl(apk?.browser_download_url) || fallback.downloadUrl,
+    mirrorUrl: cleanMirrorUrl(apk?.browser_download_url) || fallback.mirrorUrl,
     releaseUrl: data.html_url || releasesUrl,
     notes: pickNotes(data.body).length ? pickNotes(data.body) : fallback.notes,
     live: true,
