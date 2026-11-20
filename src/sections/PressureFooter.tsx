@@ -1,5 +1,6 @@
 import { ArrowUp, Heart } from 'lucide-react';
 import { GithubGlyph } from '@/components/common/icons';
+import TextPressure from '@/components/reactbits/TextPressure';
 import { BrandMark } from '@/components/common/BrandMark';
 import { MaskReveal } from '@/motion/MaskReveal';
 import { siteConfig } from '@/config/siteConfig';
@@ -69,21 +70,31 @@ export function PressureFooter() {
       </div>
 
       <MaskReveal
-        className="relative mx-auto mt-10 w-full max-w-[1200px] px-6 sm:mt-12 sm:px-8"
+        className="relative mx-auto mt-8 h-[clamp(56px,12.5vw,176px)] w-full max-w-[1200px] px-6 sm:mt-10 sm:px-8"
         duration={1.1}
         from="bottom"
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none select-none text-center font-semibold leading-[0.86] tracking-[-0.05em] text-[#0A0C10]/[0.075]"
-          style={{
-            fontSize: 'clamp(56px, 12.5vw, 176px)',
-            maskImage: 'linear-gradient(180deg, #000 42%, transparent 96%)',
-            WebkitMaskImage: 'linear-gradient(180deg, #000 42%, transparent 96%)',
-          }}
-        >
-          CLOUDTRACE
-        </div>
+        <TextPressure
+          text="CLOUDTRACE"
+          fontFamily="'Inter Variable', system-ui, sans-serif"
+          fontUrl="data:text/css,"
+          width={false}
+          weight
+          alpha={false}
+          italic={false}
+          flex
+          stroke={false}
+          scale
+          radius={1}
+          smoothing={0.5}
+          idle="none"
+          idleSpeed={0.35}
+          clickRipple
+          textColor="rgba(10,12,16,0.09)"
+          pressureColor="rgba(10,12,16,0.24)"
+          minFontSize={28}
+          className="h-full w-full"
+        />
       </MaskReveal>
 
       <div className="relative border-t border-[#0A0C10]/[0.08]">

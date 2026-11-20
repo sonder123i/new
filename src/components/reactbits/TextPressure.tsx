@@ -248,7 +248,10 @@ const TextPressure: React.FC<TextPressureProps> = ({
 
     const resize = () => {
       const { width: containerW, height: containerH } = container.getBoundingClientRect();
-      const nextFontSize = Math.max(chars.length ? containerW / (chars.length / 2) : minFontSize, minFontSize);
+      /* 10 个大写字母在 Inter 下的平均步进约 0.65em，按 `宽 / (字数 / 2)` 算会溢出 10%，
+         这里按每字 0.66em 反推，保证整词落在容器内。 */
+      const perChar = Math.max(chars.length * 0.66, 1);
+      const nextFontSize = Math.max(containerW / perChar, minFontSize);
       setFontSize(nextFontSize);
       setScaleY(scale && containerH > 0 ? containerH / nextFontSize : 1);
     };

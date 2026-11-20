@@ -73,73 +73,163 @@ function BentoCard({
   );
 }
 
-/** 01 · AGSL 液态玻璃折射实验台（补上 ViewportLazyMount 懒挂载） */
+/** 01 · AGSL 液态玻璃折射实验台（指针驱动透镜视差 + 高光跟随） */
 function AgslVisual() {
   const { isFlagship } = usePerformance();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
+  const contourRef = useRef<SVGGElement>(null);
+
+  /* 透镜交互：指针在卡片里移动时，底层等高线按视差反向位移，
+     整颗玻璃随指针做极小的 3D 倾斜，镜面高光跟着走。
+     全部直接写 DOM，不走 state；松手后弹簧式回到中位。 */
+  useEffect(() => {
+    if (!isFlagship) return undefined;
+    const stage = stageRef.current;
+    const pill = pillRef.current;
+    const contour = contourRef.current;
+    if (!stage || !pill || !contour) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
+    let raf = 0;
+    const current = { x: 0, y: 0 };
+    const goal = { x: 0, y: 0 };
+
+    const paint = () => {
+      current.x += (goal.x - current.x) * 0.14;
+      current.y += (goal.y - current.y) * 0.14;
+
+      contour.setAttribute(
+        'transform',
+        `translate(${(-current.x * 26).toFixed(2)} ${(-current.y * 18).toFixed(2)})`,
+      );
+      pill.style.transform =
+        `perspective(720px) rotateX(${(current.y * 7).toFixed(2)}deg) ` +
+        `rotateY(${(-current.x * 9).toFixed(2)}deg) ` +
+        `translate3d(${(current.x * 5).toFixed(2)}px, ${(current.y * 4).toFixed(2)}px, 0)`;
+      pill.style.setProperty('--lens-x', `${(50 + current.x * 82).toFixed(1)}%`);
+      pill.style.setProperty('--lens-y', `${(45 + current.y * 82).toFixed(1)}%`);
+
+      if (Math.abs(goal.x - current.x) > 0.002 || Math.abs(goal.y - current.y) > 0.002) {
+        raf = requestAnimationFrame(paint);
+      } else {
+        raf = 0;
+      }
+    };
+
+    const wake = () => {
+      if (!raf) raf = requestAnimationFrame(paint);
+    };
+
+    const onMove = (event: PointerEvent) => {
+      const rect = stage.getBoundingClientRect();
+      goal.x = (event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5;
+      goal.y = (event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5;
+      wake();
+    };
+    const onLeave = () => {
+      goal.x = 0;
+      goal.y = 0;
+      wake();
+    };
+
+    stage.addEventListener('pointermove', onMove, { passive: true });
+    stage.addEventListener('pointerleave', onLeave);
+    return () => {
+      cancelAnimationFrame(raf);
+      stage.removeEventListener('pointermove', onMove);
+      stage.removeEventListener('pointerleave', onLeave);
+    };
+  }, [isFlagship]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-[#EAEFF6]/60 to-transparent">
+    <div
+      ref={stageRef}
+      className="absolute inset-0 overflow-hidden bg-gradient-to-b from-[#EAEFF6]/60 to-transparent"
+    >
       <svg
         viewBox="0 0 700 360"
         className="absolute inset-0 h-full w-full"
         fill="none"
         preserveAspectRatio="xMidYMid slice"
       >
-        {Array.from({ length: 13 }).map((_, index) => (
-          <ellipse
-            key={index}
-            cx={340 + Math.sin(index * 1.6) * 12}
-            cy={168 + Math.cos(index * 1.2) * 8}
-            rx={56 + index * 24}
-            ry={30 + index * 14}
-            transform={`rotate(${-10 + Math.sin(index) * 3} 340 168)`}
-            stroke={index === 4 ? 'rgba(10,12,16,0.34)' : 'rgba(10,12,16,0.09)'}
-            strokeWidth={index === 4 ? 1.35 : 1}
-          />
-        ))}
+        <g ref={contourRef} style={{ willChange: 'transform' }}>
+          {Array.from({ length: 13 }).map((_, index) => (
+            <ellipse
+              key={index}
+              cx={340 + Math.sin(index * 1.6) * 12}
+              cy={168 + Math.cos(index * 1.2) * 8}
+              rx={56 + index * 24}
+              ry={30 + index * 14}
+              transform={`rotate(${-10 + Math.sin(index) * 3} 340 168)`}
+              stroke={index === 4 ? 'rgba(10,12,16,0.34)' : 'rgba(10,12,16,0.09)'}
+              strokeWidth={index === 4 ? 1.35 : 1}
+            />
+          ))}
+        </g>
       </svg>
 
       <div className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2">
-        {isFlagship ? (
-          <ViewportLazyMount className="h-[92px] w-[264px]" rootMargin="200px 0px" unmountDelay={500}>
-            <GlassSurface
-              width={264}
-              height={92}
-              borderRadius={46}
-              borderWidth={0.08}
-              brightness={88}
-              opacity={0.94}
-              blur={11}
-              displace={1.1}
-              backgroundOpacity={0.22}
-              saturation={1.45}
-              distortionScale={-125}
-              redOffset={4}
-              greenOffset={9}
-              blueOffset={15}
-              refraction
-              mixBlendMode="normal"
-            >
-              <div className="flex flex-col items-center gap-1">
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0A0C10]">
-                  AGSL · LIQUID GLASS
-                </span>
-                <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-[#0A0C10]/55">
-                  RuntimeShader · SDF ROUND
-                </span>
-              </div>
-            </GlassSurface>
-          </ViewportLazyMount>
-        ) : (
-          <div className="glass-panel flex h-[92px] w-[264px] flex-col items-center justify-center gap-1 rounded-full">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0A0C10]">
-              AGSL · LIQUID GLASS
-            </span>
-            <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-[#0A0C10]/55">
-              RuntimeShader · 120Hz
-            </span>
-          </div>
-        )}
+        <div
+          ref={pillRef}
+          className="relative will-change-transform"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+          {isFlagship ? (
+            <ViewportLazyMount className="h-[92px] w-[264px]" rootMargin="200px 0px" unmountDelay={500}>
+              <GlassSurface
+                width={264}
+                height={92}
+                borderRadius={46}
+                borderWidth={0.08}
+                brightness={88}
+                opacity={0.94}
+                blur={11}
+                displace={1.1}
+                backgroundOpacity={0.22}
+                saturation={1.45}
+                distortionScale={-125}
+                redOffset={4}
+                greenOffset={9}
+                blueOffset={15}
+                refraction
+                mixBlendMode="normal"
+              >
+                <div className="flex flex-col items-center gap-1">
+                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0A0C10]">
+                    AGSL · LIQUID GLASS
+                  </span>
+                  <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-[#0A0C10]/55">
+                    RuntimeShader · SDF ROUND
+                  </span>
+                </div>
+              </GlassSurface>
+            </ViewportLazyMount>
+          ) : (
+            <div className="glass-panel flex h-[92px] w-[264px] flex-col items-center justify-center gap-1 rounded-full">
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0A0C10]">
+                AGSL · LIQUID GLASS
+              </span>
+              <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-[#0A0C10]/55">
+                RuntimeShader · 120Hz
+              </span>
+            </div>
+          )}
+
+          {/* 镜面高光：随指针在镜面上滑动，增强「这是一块玻璃」的读数 */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
+            style={{
+              background:
+                'radial-gradient(132px circle at var(--lens-x, 50%) var(--lens-y, 45%), rgba(255,255,255,0.92), rgba(255,255,255,0.26) 46%, transparent 72%)',
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-white/70"
+          />
+        </div>
       </div>
 
       <span className="absolute left-5 top-4 font-mono text-[9.5px] uppercase tracking-[0.18em] text-[#0A0C10]/40">
